@@ -14,7 +14,6 @@ process.on('unhandledRejection', err => {
 // Ensure environment variables are read.
 require('../config/env');
 
-
 const fs = require('fs');
 const chalk = require('chalk');
 const webpack = require('webpack');
@@ -76,6 +75,15 @@ checkBrowsers(paths.appPath, isInteractive)
       return;
     }
     const config = configFactory('development');
+    config.bail = false // disable bail when watching
+    config.output = Object.assign({}, config.output, {
+      filename: '[name].[hash].js',
+      publicPath: `http://${HOST}:${port}/`
+    })
+    // const makeClient = require.resolve('../config/reference/webpackHotDevClient');
+    // console.log(makeClient);
+    // makeClient('http:', HOST, port);
+    config.entry = [require.resolve('../config/reference/webpackHotDevClient')].concat(config.entry);
     const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
     const appName = require(paths.appPackageJson).name;
     const urls = prepareUrls(protocol, HOST, port);

@@ -1,8 +1,15 @@
 import React from 'react'
 //import Icon from 'cozy-ui/react/Icon'
+import {
+  Layout, Menu, Breadcrumb, Icon,
+} from 'antd';
 import { translate } from 'reference/i18n'
 import { NavLink } from 'react-router-dom'
-import NavIcon from '../assets/icons/icon-bullet-point.svg'
+// import NavIcon from '../assets/icons/icon-bullet-point.svg'
+
+const {
+  Header, Content, Footer, Sider,
+} = Layout;
 
 export const Sidebar = ({ t }) => (
   <aside className="o-sidebar">

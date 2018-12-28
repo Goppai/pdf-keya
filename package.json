@@ -5,6 +5,7 @@
   "dependencies": {
     "@babel/core": "7.1.6",
     "@svgr/webpack": "2.4.1",
+    "antd": "^3.11.6",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "9.0.0",
     "babel-jest": "23.6.0",
@@ -14,7 +15,10 @@
     "bfj": "6.1.1",
     "case-sensitive-paths-webpack-plugin": "2.1.2",
     "chalk": "2.4.1",
+    "copy-webpack-plugin": "^4.6.0",
+    "cozy-bar": "^6.9.7",
     "cozy-client": "^5.2.1",
+    "cozy-client-js": "^0.14.2",
     "css-loader": "1.0.0",
     "date-fns": "^1.30.1",
     "dotenv": "6.0.0",
@@ -29,6 +33,7 @@
     "file-loader": "2.0.0",
     "fork-ts-checker-webpack-plugin-alt": "0.4.14",
     "fs-extra": "7.0.0",
+    "html-webpack-include-assets-plugin": "^1.0.6",
     "html-webpack-plugin": "4.0.0-alpha.2",
     "identity-obj-proxy": "3.0.0",
     "jest": "23.6.0",
@@ -55,7 +60,8 @@
     "webpack": "4.19.1",
     "webpack-dev-server": "3.1.9",
     "webpack-manifest-plugin": "2.0.4",
-    "workbox-webpack-plugin": "3.6.3"
+    "workbox-webpack-plugin": "3.6.3",
+    "write-file-webpack-plugin": "^4.5.0"
   },
   "scripts": {
     "start": "node scripts/start.js",
@@ -116,5 +122,8 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "babel-plugin-import": "^1.11.0"
   }
 }

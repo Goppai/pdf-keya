@@ -23,7 +23,9 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin-alt');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
-
+const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
+const WriteFilePlugin = require('write-file-webpack-plugin');
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -39,6 +41,11 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
+
+const buildCozyBarCss = `${paths.appBuild}/cozy-bar.css`
+const buildCozyBarJs = `${paths.appBuild}/cozy-bar.js`
+const buildCozyClientJs = `${paths.appBuild}/cozy-client-js.js`
+const manifestWebApp = `${paths.appBuild}/manifest.webapp`
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -135,8 +142,8 @@ module.exports = function(webpackEnv) {
       // the line below with these two lines if you prefer the stock client:
       // require.resolve('webpack-dev-server/client') + '?/',
       // require.resolve('webpack/hot/dev-server'),
-      isEnvDevelopment &&
-        require.resolve('react-dev-utils/webpackHotDevClient'),
+      // isEnvDevelopment &&
+      //   require.resolve('./reference/webpackHotDevClient'),
       // Finally, this is your app's code:
       paths.appIndexJs,
       // We include the app code last so that if there is a runtime error during
@@ -145,7 +152,7 @@ module.exports = function(webpackEnv) {
     ].filter(Boolean),
     output: {
       // The build folder.
-      path: isEnvProduction ? paths.appBuild : undefined,
+      path: isEnvProduction ? paths.appBuild : paths.appBuild,
       // Add /* filename */ comments to generated require()s in the output.
       pathinfo: isEnvDevelopment,
       // There will be one main bundle, and one file per asynchronous chunk.
@@ -348,6 +355,10 @@ module.exports = function(webpackEnv) {
                       },
                     },
                   ],
+                  [
+                    require.resolve('babel-plugin-import'),
+                    { libraryName: 'antd', libraryDirectory: 'es', style: 'css' }
+                  ],
                 ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -496,6 +507,33 @@ module.exports = function(webpackEnv) {
             : undefined
         )
       ),
+      new CopyPlugin([
+        {
+          from: paths.appCozyBarJs(),
+          to: buildCozyBarJs
+        },
+        {
+          from: paths.appCozyBarCss(),
+          to: buildCozyBarCss
+        },
+        {
+          from: paths.appCozyClientJs(),
+          to: buildCozyClientJs
+        },
+        {
+          from: paths.appManifest(),
+          to: manifestWebApp
+        }
+      ]),
+      new HtmlWebpackIncludeAssetsPlugin({
+        assets: ['cozy-bar.js', 'cozy-bar.css', 'cozy-client-js.js'],
+        append: false,
+        publicPath: true
+      }),
+      new WriteFilePlugin({
+        test: /\.(html|webapp)$/,
+        // Write only files that have ".html" extension.
+      }),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
       isEnvProduction &&
