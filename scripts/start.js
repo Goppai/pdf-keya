@@ -94,9 +94,16 @@ checkBrowsers(paths.appPath, isInteractive)
       path.join(__dirname, '../tmp/devserver.js'),
       `module.exports = ${JSON.stringify(json)}`
     );
-    config.entry = [
-      require.resolve('../config/reference/webpackHotDevClient')
-    ].concat(config.entry);
+    if (Array.isArray(config.entry.app)) {
+      config.entry.app = [
+        require.resolve('../config/reference/webpackHotDevClient')
+      ].concat(config.entry.app);
+    }
+    if (Array.isArray(config.entry.intents)) {
+      config.entry.intents = [
+        require.resolve('../config/reference/webpackHotDevClient')
+      ].concat(config.entry.intents);
+    }
     const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
     const appName = require(paths.appPackageJson).name;
     const urls = prepareUrls(protocol, HOST, port);

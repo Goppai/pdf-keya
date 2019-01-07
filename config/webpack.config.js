@@ -47,6 +47,15 @@ const buildCozyBarJs = `${paths.appBuild}/cozy-bar.js`;
 const buildCozyClientJs = `${paths.appBuild}/cozy-client-js.js`;
 const manifestWebApp = `${paths.appBuild}/manifest.webapp`;
 
+const hasIntents =
+  fs.existsSync(paths.intentHtml) && fs.existsSync(paths.intentIndexJs);
+
+const manifest = JSON.parse(fs.readFileSync(paths.appManifest()));
+
+const appName = manifest.name_prefix
+  ? `${manifest.name_prefix} ${manifest.name}`
+  : manifest.name;
+
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 module.exports = function(webpackEnv) {
@@ -131,7 +140,7 @@ module.exports = function(webpackEnv) {
       : isEnvDevelopment && 'cheap-module-source-map',
     // These are the "entry points" to our application.
     // This means they will be the "root" imports that are included in JS bundle.
-    entry: [
+    entry: {
       // Include an alternative client for WebpackDevServer. A client's job is to
       // connect to WebpackDevServer by a socket and get notified about changes.
       // When you save a file, the client will either apply hot updates (in case
@@ -145,11 +154,12 @@ module.exports = function(webpackEnv) {
       // isEnvDevelopment &&
       //   require.resolve('./reference/webpackHotDevClient'),
       // Finally, this is your app's code:
-      paths.appIndexJs
+      app: [paths.appIndexJs],
+      intents: hasIntents ? [paths.appIndexJs] : []
       // We include the app code last so that if there is a runtime error during
       // initialization, it doesn't blow up the WebpackDevServer client, and
       // changing JS code would still trigger a refresh.
-    ].filter(Boolean),
+    },
     output: {
       // The build folder.
       path: isEnvProduction ? paths.appBuild : paths.appBuild,
@@ -488,7 +498,9 @@ module.exports = function(webpackEnv) {
           {},
           {
             inject: true,
-            template: paths.appHtml
+            title: appName,
+            template: paths.appHtml,
+            chunks: ['vendors', 'app']
           },
           isEnvProduction
             ? {
@@ -508,6 +520,35 @@ module.exports = function(webpackEnv) {
             : undefined
         )
       ),
+      hasIntents &&
+        new HtmlWebpackPlugin(
+          Object.assign(
+            {},
+            {
+              inject: true,
+              title: `${appName} intents`,
+              template: paths.intentHtml,
+              chunks: ['vendors', 'intents'],
+              filename: 'intents/index.html'
+            },
+            isEnvProduction
+              ? {
+                  minify: {
+                    removeComments: true,
+                    collapseWhitespace: true,
+                    removeRedundantAttributes: true,
+                    useShortDoctype: true,
+                    removeEmptyAttributes: true,
+                    removeStyleLinkTypeAttributes: true,
+                    keepClosingSlash: true,
+                    minifyJS: true,
+                    minifyCSS: true,
+                    minifyURLs: true
+                  }
+                }
+              : undefined
+          )
+        ),
       isEnvDevelopment &&
         new CopyPlugin([
           {
