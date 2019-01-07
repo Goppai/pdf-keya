@@ -49,7 +49,7 @@ const moduleFileExtensions = [
   'tsx',
   'json',
   'web.jsx',
-  'jsx',
+  'jsx'
 ];
 
 // Resolve file paths in the same order as webpack
@@ -71,8 +71,10 @@ module.exports = {
   appPath: resolveApp('.'),
   appBuild: resolveApp('build'),
   appPublic: resolveApp('public'),
-  appHtml: resolveApp('public/index.html'),
+  appHtml: resolveApp('src/targets/browser/index.html'),
+  intentHtml: resolveApp('src/targets/intents/index.html'),
   appIndexJs: resolveModule(resolveApp, 'src/targets/browser/index'),
+  intentIndexJs: resolveModule(resolveApp, 'src/targets/intents/index'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   appTsConfig: resolveApp('tsconfig.json'),
@@ -86,8 +88,7 @@ module.exports = {
   appCozyBarCss: () => resolveApp('node_modules/cozy-bar/dist/cozy-bar.css'),
   appCozyClientJs: () =>
     resolveApp('node_modules/cozy-client-js/dist/cozy-client.js'),
-  appManifest: () => 
-    resolveApp('src/manifest.webapp'),
+  appManifest: () => resolveApp('src/manifest.webapp')
 };
 
 module.exports.moduleFileExtensions = moduleFileExtensions;

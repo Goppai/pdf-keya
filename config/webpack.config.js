@@ -508,29 +508,33 @@ module.exports = function(webpackEnv) {
             : undefined
         )
       ),
+      isEnvDevelopment &&
+        new CopyPlugin([
+          {
+            from: paths.appCozyBarJs(),
+            to: buildCozyBarJs
+          },
+          {
+            from: paths.appCozyBarCss(),
+            to: buildCozyBarCss
+          },
+          {
+            from: paths.appCozyClientJs(),
+            to: buildCozyClientJs
+          }
+        ]),
       new CopyPlugin([
-        {
-          from: paths.appCozyBarJs(),
-          to: buildCozyBarJs
-        },
-        {
-          from: paths.appCozyBarCss(),
-          to: buildCozyBarCss
-        },
-        {
-          from: paths.appCozyClientJs(),
-          to: buildCozyClientJs
-        },
         {
           from: paths.appManifest(),
           to: manifestWebApp
         }
       ]),
-      new HtmlWebpackIncludeAssetsPlugin({
-        assets: ['cozy-bar.js', 'cozy-bar.css', 'cozy-client-js.js'],
-        append: false,
-        publicPath: true
-      }),
+      isEnvDevelopment &&
+        new HtmlWebpackIncludeAssetsPlugin({
+          assets: ['cozy-bar.js', 'cozy-bar.css', 'cozy-client-js.js'],
+          append: false,
+          publicPath: true
+        }),
       new WriteFilePlugin({
         test: /\.(html|webapp)$/
         // Write only files that have ".html" extension.
@@ -556,6 +560,9 @@ module.exports = function(webpackEnv) {
       // during a production build.
       // Otherwise React will be compiled in the very slow development mode.
       new webpack.DefinePlugin(env.stringified),
+      new webpack.DefinePlugin({
+        __STACK_ASSETS__: !isEnvDevelopment
+      }),
       // This is necessary to emit hot updates (currently CSS only):
       isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
       // Watcher doesn't work well if you mistype casing in a path so we use
