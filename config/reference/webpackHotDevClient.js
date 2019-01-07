@@ -16,6 +16,8 @@
 // that looks similar to our console output. The error overlay is inspired by:
 // https://github.com/glenjamin/webpack-hot-middleware
 
+var path = require('path');
+const fs = require('fs');
 var SockJS = require('sockjs-client');
 var stripAnsi = require('strip-ansi');
 var url = require('url');
@@ -47,7 +49,7 @@ ErrorOverlay.startReportingRuntimeErrors({
   onError: function() {
     hadRuntimeError = true;
   },
-  filename: '/static/js/bundle.js',
+  filename: '/static/js/bundle.js'
 });
 
 if (module.hot && typeof module.hot.dispose === 'function') {
@@ -58,13 +60,27 @@ if (module.hot && typeof module.hot.dispose === 'function') {
 }
 
 // Connect to WebpackDevServer via a socket.
+
+let serverConfig = {
+  host: 'localhost',
+  port: 3000
+};
+
+try {
+  const json = require('../../tmp/devserver.js');
+  if (json.port && json.host) {
+    serverConfig.port = json.port;
+    serverConfig.host = json.host;
+  }
+} catch (e) {}
+
 var connection = new SockJS(
   url.format({
     protocol: 'http:',
-    hostname: 'localhost',
-    port: 3000,
+    hostname: serverConfig.host,
+    port: serverConfig.port,
     // Hardcoded in WebpackDevServer
-    pathname: '/sockjs-node',
+    pathname: '/sockjs-node'
   })
 );
 
@@ -123,7 +139,7 @@ function handleWarnings(warnings) {
     // Print warnings to the console.
     var formatted = formatWebpackMessages({
       warnings: warnings,
-      errors: [],
+      errors: []
     });
 
     if (typeof console !== 'undefined' && typeof console.warn === 'function') {
@@ -166,7 +182,7 @@ function handleErrors(errors) {
   // "Massage" webpack messages.
   var formatted = formatWebpackMessages({
     errors: errors,
-    warnings: [],
+    warnings: []
   });
 
   // Only show the first error.

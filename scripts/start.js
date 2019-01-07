@@ -15,6 +15,7 @@ process.on('unhandledRejection', err => {
 require('../config/env');
 
 const fs = require('fs');
+const path = require('path');
 const chalk = require('chalk');
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
@@ -24,7 +25,7 @@ const {
   choosePort,
   createCompiler,
   prepareProxy,
-  prepareUrls,
+  prepareUrls
 } = require('react-dev-utils/WebpackDevServerUtils');
 const openBrowser = require('react-dev-utils/openBrowser');
 const paths = require('../config/paths');
@@ -75,15 +76,27 @@ checkBrowsers(paths.appPath, isInteractive)
       return;
     }
     const config = configFactory('development');
-    config.bail = false // disable bail when watching
+    config.bail = false; // disable bail when watching
     config.output = Object.assign({}, config.output, {
       filename: '[name].[hash].js',
       publicPath: `http://${HOST}:${port}/`
-    })
-    // const makeClient = require.resolve('../config/reference/webpackHotDevClient');
-    // console.log(makeClient);
-    // makeClient('http:', HOST, port);
-    config.entry = [require.resolve('../config/reference/webpackHotDevClient')].concat(config.entry);
+    });
+    const json = {
+      host: HOST,
+      port
+    };
+    try {
+      fs.mkdirSync(path.join(__dirname, '../tmp'), {
+        recursive: true
+      });
+    } catch (e) {}
+    fs.writeFileSync(
+      path.join(__dirname, '../tmp/devserver.js'),
+      `module.exports = ${JSON.stringify(json)}`
+    );
+    config.entry = [
+      require.resolve('../config/reference/webpackHotDevClient')
+    ].concat(config.entry);
     const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
     const appName = require(paths.appPackageJson).name;
     const urls = prepareUrls(protocol, HOST, port);
