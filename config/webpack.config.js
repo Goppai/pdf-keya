@@ -1,5 +1,3 @@
-'use strict';
-
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
@@ -155,7 +153,7 @@ module.exports = function(webpackEnv) {
       //   require.resolve('./reference/webpackHotDevClient'),
       // Finally, this is your app's code:
       app: [paths.appIndexJs],
-      intents: hasIntents ? [paths.appIndexJs] : []
+      intents: hasIntents ? [paths.intentIndexJs] : []
       // We include the app code last so that if there is a runtime error during
       // initialization, it doesn't blow up the WebpackDevServer client, and
       // changing JS code would still trigger a refresh.
