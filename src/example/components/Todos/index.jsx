@@ -1,15 +1,15 @@
-import React from 'react'
+import React from 'react';
 
-import { queryConnect } from 'cozy-client'
-import { todosQuery } from 'doctypes'
+import { queryConnect } from 'cozy-client';
+import { todosQuery } from '../../doctypes';
 
-import TodoAdd from './TodoAdd'
-import TodosList from './TodosList'
+import TodoAdd from './TodoAdd';
+import TodosList from './TodosList';
 
 export const Todos = props => {
-  const { data, fetchStatus } = props.todos
+  const { data, fetchStatus } = props.todos;
   // cozy-client statuses
-  const isLoading = fetchStatus === 'loading' || fetchStatus === 'pending'
+  const isLoading = fetchStatus === 'loading' || fetchStatus === 'pending';
   return (
     <div className="todos">
       {isLoading ? (
@@ -21,8 +21,8 @@ export const Todos = props => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
 // get data from the client state: data, fetchStatus
 export default queryConnect({
@@ -30,4 +30,4 @@ export default queryConnect({
     query: todosQuery,
     as: 'todos'
   }
-})(Todos)
+})(Todos);

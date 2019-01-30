@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 
 import { withMutations } from 'cozy-client';
-// import Input from 'cozy-ui/react/Input'
-// import Label from 'cozy-ui/react/Label'
-// import Button from 'cozy-ui/react/Button'
 
-import { TODOS_DOCTYPE } from 'doctypes';
+import { TODOS_DOCTYPE } from '../../doctypes';
 
 export class TodoAdd extends Component {
   constructor(props, context) {
@@ -34,7 +31,7 @@ export class TodoAdd extends Component {
   };
 
   render() {
-    const { todoToAdd, isWorking } = this.state;
+    const { todoToAdd } = this.state;
     return (
       <div>
         <h2>Add a new Todo:</h2>

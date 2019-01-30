@@ -1,17 +1,15 @@
 import React from 'react';
 import CozyClient, { CozyProvider } from 'cozy-client';
 import { render } from 'react-dom';
-import { I18n } from 'reference/i18n';
-import schema from 'doctypes';
+import { I18n } from 'example/reference/i18n';
+import schema from 'example/doctypes';
+import App from 'example/components/App';
+import locales from 'example/locales';
 
 let appLocale;
 const renderApp = function(client) {
-  const App = require('components/App').default;
   render(
-    <I18n
-      lang={appLocale}
-      dictRequire={appLocale => require(`locales/${appLocale}`)}
-    >
+    <I18n lang={appLocale} dictRequire={appLocale => locales[appLocale]}>
       <CozyProvider client={client}>
         <App />
       </CozyProvider>
