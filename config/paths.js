@@ -1,5 +1,3 @@
-'use strict';
-
 const path = require('path');
 const fs = require('fs');
 const url = require('url');
@@ -88,7 +86,7 @@ module.exports = {
   appCozyBarCss: () => resolveApp('node_modules/cozy-bar/dist/cozy-bar.css'),
   appCozyClientJs: () =>
     resolveApp('node_modules/cozy-client-js/dist/cozy-client.js'),
-  appManifest: () => resolveApp('src/manifest.webapp')
+  appManifest: () => resolveApp('src/targets/manifest.webapp')
 };
 
 module.exports.moduleFileExtensions = moduleFileExtensions;

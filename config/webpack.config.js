@@ -43,12 +43,13 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 const buildCozyBarCss = `${paths.appBuild}/cozy-bar.css`;
 const buildCozyBarJs = `${paths.appBuild}/cozy-bar.js`;
 const buildCozyClientJs = `${paths.appBuild}/cozy-client-js.js`;
-const manifestWebApp = `${paths.appBuild}/manifest.webapp`;
+const buildManifest = `${paths.appBuild}/manifest.webapp`;
+const manifestWebApp = paths.appManifest();
 
 const hasIntents =
   fs.existsSync(paths.intentHtml) && fs.existsSync(paths.intentIndexJs);
 
-const manifest = JSON.parse(fs.readFileSync(paths.appManifest()));
+const manifest = JSON.parse(fs.readFileSync(manifestWebApp));
 
 const appName = manifest.name_prefix
   ? `${manifest.name_prefix} ${manifest.name}`
@@ -367,6 +368,12 @@ module.exports = function(webpackEnv) {
                       libraryDirectory: 'es',
                       style: 'css'
                     }
+                  ],
+                  [
+                    require.resolve('babel-plugin-react-intl'),
+                    {
+                      messagesDir: './src/locales/output'
+                    }
                   ]
                 ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
@@ -564,8 +571,8 @@ module.exports = function(webpackEnv) {
         ]),
       new CopyPlugin([
         {
-          from: paths.appManifest(),
-          to: manifestWebApp
+          from: manifestWebApp,
+          to: buildManifest
         }
       ]),
       isEnvDevelopment &&

@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 
 import { withMutations } from 'cozy-client';
-// import Input from 'cozy-ui/react/Input'
-// import Label from 'cozy-ui/react/Label'
-// import Button from 'cozy-ui/react/Button'
+import { FormattedMessage } from 'react-intl';
 
-import { TODOS_DOCTYPE } from 'doctypes';
+import { TODOS_DOCTYPE } from '../../doctypes';
 
 export class TodoAdd extends Component {
   constructor(props, context) {
@@ -34,12 +32,22 @@ export class TodoAdd extends Component {
   };
 
   render() {
-    const { todoToAdd, isWorking } = this.state;
+    const { todoToAdd } = this.state;
     return (
       <div>
-        <h2>Add a new Todo:</h2>
+        <h2>
+          <FormattedMessage
+            id="example.addTodo"
+            defaultMessage="Add a new Todo:"
+          />
+        </h2>
         <form onSubmit={this.handleSubmit}>
-          <label htmlFor="todo-add-input"> Todo name: </label>
+          <label htmlFor="todo-add-input">
+            <FormattedMessage
+              id="example.todoName"
+              defaultMessage="Todo name: "
+            />
+          </label>
           <input
             value={todoToAdd}
             onChange={this.handleChange}

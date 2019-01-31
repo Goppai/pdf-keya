@@ -1,15 +1,7 @@
-import React from 'react'
-//import Icon from 'cozy-ui/react/Icon'
-import {
-  Layout, Menu, Breadcrumb, Icon,
-} from 'antd';
-import { translate } from 'reference/i18n'
-import { NavLink } from 'react-router-dom'
-// import NavIcon from '../assets/icons/icon-bullet-point.svg'
-
-const {
-  Header, Content, Footer, Sider,
-} = Layout;
+import React from 'react';
+import { translate } from '../reference/i18n';
+import { NavLink } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 
 export const Sidebar = ({ t }) => (
   <aside className="o-sidebar">
@@ -21,8 +13,7 @@ export const Sidebar = ({ t }) => (
             className="c-nav-link"
             activeClassName="is-active"
           >
-            {/* <Icon className="c-nav-icon" icon={NavIcon} /> */}
-            {t('Nav.todos')}
+            <FormattedMessage id="Nav.todos" defaultMessage="Todos" />
           </NavLink>
         </li>
         <li className="c-nav-item">
@@ -31,8 +22,7 @@ export const Sidebar = ({ t }) => (
             className="c-nav-link"
             activeClassName="is-active"
           >
-            {/* <Icon className="c-nav-icon" icon={NavIcon} /> */}
-            {t('Nav.hello_nav_2')}
+            <FormattedMessage id="Nav.hello_nav_2" defaultMessage="Second" />
           </NavLink>
         </li>
         <li className="c-nav-item">
@@ -41,14 +31,13 @@ export const Sidebar = ({ t }) => (
             className="c-nav-link"
             activeClassName="is-active"
           >
-            {/* <Icon className="c-nav-icon" icon={NavIcon} /> */}
-            {t('Nav.hello_nav_3')}
+            <FormattedMessage id="Nav.hello_nav_3" defaultMessage="Third" />
           </NavLink>
         </li>
       </ul>
     </nav>
   </aside>
-)
+);
 
 // translate() provide t() to use translations (ex: locales/en.json)
-export default translate()(Sidebar)
+export default translate()(Sidebar);

@@ -3,21 +3,18 @@
 import React from 'react';
 import CozyClient, { CozyProvider } from 'cozy-client';
 import { render } from 'react-dom';
-import { I18n } from 'reference/i18n';
-import schema from 'doctypes';
+import schema from 'example/doctypes';
+import App from 'example/components/App';
+import { IntlProvider } from 'locales';
 
 let appLocale;
 const renderApp = function(client) {
-  const App = require('components/App').default;
   render(
-    <I18n
-      lang={appLocale}
-      dictRequire={appLocale => require(`locales/${appLocale}`)}
-    >
+    <IntlProvider locale={appLocale}>
       <CozyProvider client={client}>
         <App />
       </CozyProvider>
-    </I18n>,
+    </IntlProvider>,
     document.querySelector('[role=application]')
   );
 };
@@ -39,13 +36,13 @@ document.addEventListener('DOMContentLoaded', () => {
   );
 
   const appNamePrefix = getDataOrDefault(
-    data.cozyAppNamePrefix || require('../../manifest.webapp').name_prefix,
+    data.cozyAppNamePrefix || require('../manifest.webapp').name_prefix,
     ''
   );
 
   const appName = getDataOrDefault(
     data.cozyAppName,
-    require('../../manifest.webapp').name
+    require('../manifest.webapp').name
   );
 
   appLocale = getDataOrDefault(data.cozyLocale, 'en');
