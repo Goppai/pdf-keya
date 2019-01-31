@@ -1,6 +1,8 @@
 import React from 'react';
 
 import { queryConnect } from 'cozy-client';
+import { FormattedMessage } from 'react-intl';
+
 import { todosQuery } from '../../doctypes';
 
 import TodoAdd from './TodoAdd';
@@ -13,7 +15,9 @@ export const Todos = props => {
   return (
     <div className="todos">
       {isLoading ? (
-        <div>Loading...</div>
+        <div>
+          <FormattedMessage id="example.loading" defaultMessage="Loading..." />
+        </div>
       ) : (
         <div>
           <TodosList todos={data} />

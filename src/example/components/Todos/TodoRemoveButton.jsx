@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 
-// import Button from 'cozy-ui/react/Button'
 import { withMutations } from 'cozy-client';
+import { injectIntl, defineMessages } from 'react-intl';
+
+const messages = defineMessages({
+  delete: {
+    id: 'example.delete',
+    defaultMessage: 'Delete'
+  }
+});
 
 export class TodoRemoveButton extends Component {
   constructor(props) {
@@ -24,12 +31,13 @@ export class TodoRemoveButton extends Component {
   };
 
   render() {
+    const { formatMessage } = this.props.intl;
     const { isWorking } = this.state;
     return (
       <button
         className="todo-remove-button"
         theme="danger"
-        label="Delete"
+        label={formatMessage(messages.delete)}
         disabled={isWorking}
         onClick={this.removeTodo}
         extension="narrow"
@@ -39,4 +47,4 @@ export class TodoRemoveButton extends Component {
 }
 
 // get mutations from the client to use deleteDocument
-export default withMutations()(TodoRemoveButton);
+export default injectIntl(withMutations()(TodoRemoveButton));

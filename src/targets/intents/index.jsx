@@ -1,19 +1,18 @@
 import React from 'react';
 import CozyClient, { CozyProvider } from 'cozy-client';
 import { render } from 'react-dom';
-import { I18n } from 'example/reference/i18n';
 import schema from 'example/doctypes';
 import App from 'example/components/App';
-import locales from 'example/locales';
+import { IntlProvider } from 'locales';
 
 let appLocale;
 const renderApp = function(client) {
   render(
-    <I18n lang={appLocale} dictRequire={appLocale => locales[appLocale]}>
+    <IntlProvider locale={appLocale}>
       <CozyProvider client={client}>
         <App />
       </CozyProvider>
-    </I18n>,
+    </IntlProvider>,
     document.querySelector('[role=application]')
   );
 };

@@ -1,7 +1,13 @@
-import React from 'react'
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 export const Hello1 = () => (
-  <p>Just... Hello world! This is a first hello view</p>
-)
+  <p>
+    <FormattedMessage
+      id="example.Hello1"
+      defaultMessage="Just... Hello world! This is a first hello view"
+    />
+  </p>
+);
 
-export default Hello1
+export default Hello1;

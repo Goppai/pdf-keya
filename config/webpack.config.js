@@ -367,6 +367,12 @@ module.exports = function(webpackEnv) {
                       libraryDirectory: 'es',
                       style: 'css'
                     }
+                  ],
+                  [
+                    require.resolve('babel-plugin-react-intl'),
+                    {
+                      messagesDir: './src/locales/output'
+                    }
                   ]
                 ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
