@@ -1,18 +1,16 @@
-import React from 'react'
-import { Route, Switch, Redirect, HashRouter } from 'react-router-dom'
+import React from 'react';
+import { Route, Switch, Redirect, HashRouter } from 'react-router-dom';
 
-import {
-  Layout
-} from 'antd';
+import { Layout } from 'antd';
 
-import Sidebar from './Sidebar'
-import Todos from './Todos'
-import Hello1 from './HelloViews/Hello1'
-import Hello2 from './HelloViews/Hello2'
+import Sidebar from './Sidebar';
+import Todos from './Todos';
+import Hello1 from './HelloViews/Hello1';
+import Hello2 from './HelloViews/Hello2';
 
-const {
-  Content
-} = Layout;
+import Data from '../ts/Data';
+
+const { Content } = Layout;
 
 const App = () => (
   <HashRouter>
@@ -29,7 +27,6 @@ const App = () => (
       </Content>
     </Layout>
   </HashRouter>
-)
+);
 
-export default App
-
+export default App;
