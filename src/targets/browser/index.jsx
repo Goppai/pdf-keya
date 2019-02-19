@@ -7,8 +7,7 @@ import schema from 'example/doctypes';
 import App from 'example/components/App';
 import { IntlProvider } from 'locales';
 
-let appLocale;
-const renderApp = function(client) {
+const renderApp = function(client, appLocale) {
   render(
     <IntlProvider locale={appLocale}>
       <CozyProvider client={client}>
@@ -45,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     require('../manifest.webapp').name
   );
 
-  appLocale = getDataOrDefault(data.cozyLocale, 'en');
+  const appLocale = getDataOrDefault(data.cozyLocale, 'zh');
 
   const protocol = window.location ? window.location.protocol : 'https:';
 
@@ -66,5 +65,5 @@ document.addEventListener('DOMContentLoaded', () => {
     replaceTitleOnMobile: true
   });
 
-  renderApp(client);
+  renderApp(client, appLocale);
 });

@@ -18,14 +18,14 @@ class IntlProviderWrapper extends React.Component {
 
     // pass everything in state to avoid creating object inside render method (like explained in the documentation)
     this.state = {
-      locale: this.props.locale || 'zh',
+      locale: this.props.locale,
       switchLanguage: this.switchLanguage
     };
   }
 
   render() {
     const { children } = this.props;
-    const { locale } = this.state;
+    const locale = messages[this.state.locale] ? this.state.locale : 'zh';
     return (
       <Provider value={this.state}>
         <IntlProvider

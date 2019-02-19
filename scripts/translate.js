@@ -45,7 +45,7 @@ let defaultMessages = globSync(MESSAGES_PATTERN)
 
 mkdirpSync(LANG_DIR);
 fs.writeFileSync(
-  LANG_DIR + 'template.json',
+  LANG_DIR + 'data/template.json',
   JSON.stringify(defaultMessages, null, 2)
 );
 // fs.writeFileSync(
