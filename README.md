@@ -87,12 +87,100 @@ npm build
 
 ### 多语言
 
-#### 流程
+#### 接入和使用流程
 
-- 按照 browser/index.js 类似的方式加入 react-intl, 并在初始化的时候加入适当的 locale. 中文 locale 是 zh
-- 参考 example 内的写法， 以及[react-intl](https://github.com/yahoo/react-intl) 在自己的 app 内进行翻译
-- 调用 yarn build && yarn langs 来生成并更新 src/locales/template.json 文件
-- 按照 template.json 内的对应内容， 在 src/locales/zh.json 内进行翻译
+##### 按照 browser/index.js 类似的方式加入 react-intl
+
+```js
+import { IntlProvider } from 'locales';
+
+const renderApp = function(client, appLocale) {
+  render(
+    <IntlProvider locale={appLocale}>
+      <CozyProvider client={client}>
+        <App />
+      </CozyProvider>
+    </IntlProvider>,
+    document.querySelector('[role=application]')
+  );
+};
+```
+
+##### 用法可参考 example 内的写法， 以及[react-intl](https://github.com/yahoo/react-intl) 在自己的 app 内进行翻译
+
+用 react 组件的方式使用
+
+```js
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
+
+export const Hello1 = () => (
+  <p>
+    <FormattedMessage
+      id="example.Hello1"
+      defaultMessage="Just... Hello world! This is a first hello view"
+    />
+  </p>
+);
+```
+
+用 formatMessage 函数的方式使用
+
+```js
+import { injectIntl, defineMessages } from 'react-intl';
+const messages = defineMessages({
+  delete: {
+    id: 'example.delete',
+    defaultMessage: 'Delete'
+  }
+});
+class TodoRemoveButton extends Component {
+  render() {
+    const { formatMessage } = this.props.intl;
+    return <div label={formatMessage(messages.delete)} />;
+  }
+}
+
+// get mutations from the client to use deleteDocument
+export default injectIntl(withMutations()(TodoRemoveButton));
+```
+
+#### 翻译流程
+
+翻译有两种流程:
+第一种是开发定义 id. 第二种是产品定义 id.
+
+##### 开发定义 id
+
+- 好处
+
+  1. 开发对于产品的依赖在于设计图和文档， 不需要有翻译 id 的依赖
+  2. 当出现多行的文本的时候， 开发更容易把握将翻译分为几行
+  3. 部分翻译需要有变量介入， 开发更容易写出合适的原始翻译文本， 翻译内容需涵盖变量
+
+- 坏处
+
+  1. 当翻译出现问题的时候， 不容易界定错误在于开发还是产品
+  2. 翻译进行更改的时候， 需要进行人工 merge
+
+- 使用流程
+  1. 调用 yarn build && yarn langs 来生成并更新 src/locales/template.json 文件
+  2. 按照 template.json 内的对应内容， copy 到新的语言文件， 进行翻译， 比如翻译为 src/locales/data/zh.json
+
+##### 产品定义 id
+
+好处还坏处和 开发定义 id 正好相反
+
+- 使用流程
+
+  1. 产品生成所有翻译的.json 文件
+  2. 开发负责定期更新文件到 repository 中
+  3. 开发直接使用产品翻译好的.json 文件， 不跑 yarn langs 脚本.
+
+- 结论
+
+两种模式各有优缺点， 但是可以很容易互相转换， 并没有严格的冲突， 所以可以采用项目合适的方法和习惯进行开发.
+defineMessages 不是必须的操作， 但是为了后期的维护性， 推荐使用.
 
 #### 原则
 
@@ -103,7 +191,7 @@ npm build
 
 ### prettierrc
 
-请配置 code 的 prettier, 这样可以从编辑器方便保证所有人的代码风格
+请配置 code 的 prettier, 这样可以通过工具保证代码风格的一致
 
 ### css
 
