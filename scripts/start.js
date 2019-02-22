@@ -40,7 +40,23 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 }
 
 // Tools like Cloud9 rely on this.
-const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
+function slugTypeToPort(slug) {
+  // Simple string to unsigned short integer hash function, range [5000, 65000)
+  // Some result
+  //   tags: 25443, comments: 53094, activities: 7032, login: 30727, dicomviewer: 56115, plyviewer: 57501
+  //
+  // !!DOES NOT guarantee uniqueness!! There might be conflict, but so far so good
+
+  if (!slug) {
+    return 0;
+  }
+  const charDiff = (a, b) => a.charCodeAt(0) - b.charCodeAt(0);
+  return [...slug].reduce((o, c, i) => o + charDiff(c, 'a') * Math.pow(26, i), 0) % 60000 + 5000;
+}
+const manifest = JSON.parse(fs.readFileSync(require.resolve('../src/targets/manifest.webapp')));
+const port = slugTypeToPort(manifest.slug) || 3000;
+
+const DEFAULT_PORT = parseInt(process.env.PORT, 10) || port;
 const HOST = process.env.HOST || ip.address();
 
 if (process.env.HOST) {
