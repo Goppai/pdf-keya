@@ -1,5 +1,5 @@
 import path from 'path';
-const req = require.context('./data', false, /\.json$/);
+const req = require.context('../app/locales', false, /\.json$/);
 
 const messages = {};
 

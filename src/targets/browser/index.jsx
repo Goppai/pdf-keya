@@ -1,24 +1,25 @@
 /* global cozy */
 
 import React from 'react';
-import CozyClient, { CozyProvider } from 'cozy-client';
 import { render } from 'react-dom';
-import schema from 'example/doctypes';
-import App from 'example/components/App';
+
 import { IntlProvider } from 'locales';
+import { Client, ClientProvider } from 'seal-client/client';
+
+import App from 'app/App';
 
 const renderApp = function(client, appLocale) {
   render(
     <IntlProvider locale={appLocale}>
-      <CozyProvider client={client}>
+      <ClientProvider client={client}>
         <App />
-      </CozyProvider>
+      </ClientProvider>
     </IntlProvider>,
     document.querySelector('[role=application]')
   );
 };
 
-// return a defaultData if the template hasn't been replaced by cozy-stack
+// return a defaultData if the template hasn't been replaced by service
 const getDataOrDefault = function(toTest, defaultData) {
   const templateRegex = /^\{\{\.[a-zA-Z]*\}\}$/; // {{.Example}}
   return templateRegex.test(toTest) ? defaultData : toTest;
@@ -29,40 +30,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const root = document.querySelector('[role=application]');
   const data = root.dataset;
 
-  const appIcon = getDataOrDefault(
-    data.cozyIconPath,
-    require('../vendor/assets/icon.svg')
-  );
-
-  const appNamePrefix = getDataOrDefault(
-    data.cozyAppNamePrefix || require('../manifest.webapp').name_prefix,
-    ''
-  );
-
-  const appName = getDataOrDefault(
-    data.cozyAppName,
-    require('../manifest.webapp').name
-  );
-
-  const appLocale = getDataOrDefault(data.cozyLocale, 'zh');
-
+  // initialize the client to interact with server
   const protocol = window.location ? window.location.protocol : 'https:';
-
-  // initialize the client to interact with the cozy stack
-  const client = new CozyClient({
-    uri: `${protocol}//${data.cozyDomain}`,
-    token: data.cozyToken,
-    schema
+  const client = new Client({
+    uri: `${protocol}//${data.domain}`,
+    token: data.token,
   });
 
-  // initialize the bar, common of all applications, it allows
-  // platform features like apps navigation without doing anything
+  const appIcon = getDataOrDefault(data.iconPath, require('../vendor/assets/icon.svg'));
+  const appName = getDataOrDefault(data.appName, require('../manifest.webapp').name);
+  const appLocale = getDataOrDefault(data.locale, 'zh');
   cozy.bar.init({
     appName: appName,
-    appNamePrefix: appNamePrefix,
     iconPath: appIcon,
     lang: appLocale,
-    replaceTitleOnMobile: true
   });
 
   renderApp(client, appLocale);

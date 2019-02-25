@@ -4,12 +4,12 @@
   "icon": "icon.svg",
   "categories": [],
   "version": "0.1.0",
-  "licence": "AGPL-3.0",
+  "licence": "CURACLOUD-1.0",
   "editor": "",
-  "source": "https://github.com/dummyedu/mycozyapp.git@build",
+  "source": "https://github.com/keyayun/test.git@latest",
   "developer": {
-    "name": "dummyedu",
-    "url": ""
+    "name": "keyayun",
+    "url": "https://github.com/keyayun"
   },
   "routes": {
     "/": {
@@ -18,15 +18,39 @@
       "public": false
     }
   },
+  "routes": {
+    "/": {
+      "folder": "/",
+      "index": "index.html",
+      "public": false
+    },
+    "/intents": {
+      "folder": "/intents",
+      "index": "index.html",
+      "public": false
+    }
+  },
+  "intents": [
+    {
+      "action": "DUMMY",
+      "type": ["keyayun.service.test"],
+      "href": "/intents"
+    }
+  ],
+  "doctype": {
+    "keyayun.service.test": {
+
+    }
+  },
   "permissions": {
     "apps": {
       "description": "Required by the cozy-bar to display the icons of the apps",
       "type": "io.cozy.apps",
       "verbs": ["GET"]
     },
-    "mocks todos": {
-      "description": "TO REMOVE: only used as demonstration about Cozy App data interactions",
-      "type": "io.mocks.todos"
+    "test": {
+      "description": "",
+      "type": "keyayun.service.test"
     }
   }
 }
