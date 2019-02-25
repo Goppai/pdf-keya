@@ -1,5 +1,5 @@
 {
-  "name": "test",
+  "name": "Test",
   "slug": "test",
   "icon": "icon.svg",
   "categories": [],
@@ -10,13 +10,6 @@
   "developer": {
     "name": "keyayun",
     "url": "https://github.com/keyayun"
-  },
-  "routes": {
-    "/": {
-      "folder": "/",
-      "index": "index.html",
-      "public": false
-    }
   },
   "routes": {
     "/": {
