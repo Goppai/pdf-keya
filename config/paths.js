@@ -86,7 +86,8 @@ module.exports = {
   appCozyBarCss: () => resolveApp('node_modules/cozy-bar/dist/cozy-bar.css'),
   appCozyClientJs: () =>
     resolveApp('node_modules/cozy-client-js/dist/cozy-client.js'),
-  appManifest: () => resolveApp('src/targets/manifest.webapp')
+  appManifest: () => resolveApp('src/targets/manifest.webapp'),
+  icons: resolveApp('src/app/icons')
 };
 
 module.exports.moduleFileExtensions = moduleFileExtensions;

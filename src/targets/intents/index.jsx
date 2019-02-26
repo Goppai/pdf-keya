@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import { IntlProvider } from 'locales';
 
 import { Client, ClientProvider } from 'seal-client/client';
-import { IFrame, IntentHandler } from 'seal-client/intent'
+import { IFrame, IntentHandler } from 'seal-client/intent';
 
 import Intent from 'app/Intent';
 

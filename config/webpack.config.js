@@ -573,6 +573,10 @@ module.exports = function(webpackEnv) {
         {
           from: manifestWebApp,
           to: buildManifest
+        },
+        {
+          from: `${paths.icons}/`,
+          to: paths.appBuild
         }
       ]),
       isEnvDevelopment &&

@@ -7,6 +7,7 @@ import { IntlProvider } from 'locales';
 import { Client, ClientProvider } from 'seal-client/client';
 
 import App from 'app/App';
+import appIcon from '../../app/icons/app-icon.svg';
 
 const renderApp = function(client, appLocale) {
   render(
@@ -32,18 +33,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // initialize the client to interact with server
   const protocol = window.location ? window.location.protocol : 'https:';
+  const cozyURL = `${protocol}//${data.domain}`;
   const client = new Client({
-    uri: `${protocol}//${data.domain}`,
-    token: data.token,
+    uri: cozyURL,
+    token: data.token
   });
 
-  const appIcon = getDataOrDefault(data.iconPath, require('../vendor/assets/icon.svg'));
-  const appName = getDataOrDefault(data.appName, require('../manifest.webapp').name);
+  const iconPath = getDataOrDefault(data.iconPath, appIcon);
+  const appName = getDataOrDefault(
+    data.appName,
+    require('../manifest.webapp').name
+  );
   const appLocale = getDataOrDefault(data.locale, 'zh');
   cozy.bar.init({
+    appSlug: data.appSlug,
+    cozyURL,
+    token: data.token,
     appName: appName,
-    iconPath: appIcon,
-    lang: appLocale,
+    iconPath,
+    lang: appLocale
   });
 
   renderApp(client, appLocale);
