@@ -1,7 +1,7 @@
 {
   "name": "Test",
   "slug": "test",
-  "icon": "app-icon.svg",
+  "icon": "favicon-32x32.png",
   "categories": [],
   "version": "0.1.0",
   "licence": "CURACLOUD-1.0",

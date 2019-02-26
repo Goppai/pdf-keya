@@ -1,14 +1,19 @@
-import React from 'react'
-import { HashRouter } from 'react-router-dom'
+import React from 'react';
+import { HashRouter } from 'react-router-dom';
 
-import { injectIntl } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
+
+const messages = defineMessages({
+  hello: {
+    id: 'example.hello',
+    defaultMessage: 'hello'
+  }
+});
 
 const App = props => (
   <HashRouter>
-    <div>
-      {props.intl.formatMessage({ id: 'example.hello' })}
-    </div>
+    <div>{props.intl.formatMessage(messages.hello)}</div>
   </HashRouter>
-)
+);
 
-export default injectIntl(App)
+export default injectIntl(App);

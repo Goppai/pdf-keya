@@ -1,11 +1,3 @@
 {
-  "example.Hello1": "Just... Hello world! This is a first hello view",
-  "example.Hello2": "Just... Hello world! This is a second hello view",
-  "Nav.todos": "Todos",
-  "Nav.hello_nav_2": "Second",
-  "Nav.hello_nav_3": "Third",
-  "example.loading": "Loading...",
-  "example.addTodo": "Add a new Todo:",
-  "example.todoName": "Todo name:",
-  "example.delete": "Delete"
+  "example.hello": "hello"
 }
