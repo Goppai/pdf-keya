@@ -42,7 +42,6 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 
 const buildCozyBarCss = `${paths.appBuild}/cozy-bar.css`;
 const buildCozyBarJs = `${paths.appBuild}/cozy-bar.js`;
-const buildCozyClientJs = `${paths.appBuild}/cozy-client-js.js`;
 const buildManifest = `${paths.appBuild}/manifest.webapp`;
 const manifestWebApp = paths.appManifest();
 

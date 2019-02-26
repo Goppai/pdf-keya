@@ -51,9 +51,15 @@ function slugTypeToPort(slug) {
     return 0;
   }
   const charDiff = (a, b) => a.charCodeAt(0) - b.charCodeAt(0);
-  return [...slug].reduce((o, c, i) => o + charDiff(c, 'a') * Math.pow(26, i), 0) % 60000 + 5000;
+  return (
+    ([...slug].reduce((o, c, i) => o + charDiff(c, 'a') * Math.pow(26, i), 0) %
+      60000) +
+    5000
+  );
 }
-const manifest = JSON.parse(fs.readFileSync(require.resolve('../src/targets/manifest.webapp')));
+const manifest = JSON.parse(
+  fs.readFileSync(require.resolve('../src/app/manifest.webapp'))
+);
 const port = slugTypeToPort(manifest.slug) || 3000;
 
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || port;

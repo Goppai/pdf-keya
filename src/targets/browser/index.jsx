@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const iconPath = getDataOrDefault(data.iconPath, appIcon);
   const appName = getDataOrDefault(
     data.appName,
-    require('../manifest.webapp').name
+    require('../../app/manifest.webapp').name
   );
   const appLocale = getDataOrDefault(data.locale, 'zh');
   navbar.init({

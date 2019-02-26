@@ -20,15 +20,15 @@
 - start: 用于开发
 - build: 用于发布
 - test: 用于测试, 目前无测试标准
-- translate: 用于进行多语言文件的生成
+- translate: 用于进行多语言文件的生成, 下有详细解释
 
 ### src
 
-下面有 3 个子目录:
+下面有 4 个子目录:
 
 #### targets
 
-放入口文件
+放入口文件, 以下文件不需进行改动， 每个 App 均相同
 
 - manifest.webapp, 这是每个 app 的描述文件, 服务器需读取
 - browser 目录下是通过启动 app 的模式打开的入口文件
@@ -36,11 +36,15 @@
 
 #### locales
 
-翻译相关的内容
+react-intl 的集成， 用于多语言
 
-#### example
+#### seal-client
 
-为用来验证 template 可以工作的文件.
+Library, 封装了服务端交互相关的逻辑
+
+#### app
+
+App 特有的数据和代码, 此目录下包括所有模版内需要 App 进行特化的代码
 
 ## 使用
 
@@ -57,10 +61,10 @@ git remote push [app-repository]
 
 #### 更改内容
 
-- 更改 manifest.webapp
-- 更改 browser/index.jsx
-- 更改 intents/index.jsx
-- 自己项目内的 src 文件自行安排
+- src/app/manifest.webapp
+- src/app/locales 内包含 App 自己的翻译内容
+- src/app/icons 内为 App 自己的 Icon
+- src/app/App|Intent 为 App 的入口组件
 
 ## 升级
 
@@ -70,10 +74,9 @@ git merge template/master
 
 ### 如果通过 copy 文件而来
 
-- 覆盖 config, scripts 目录到本地的同名目录
+- 覆盖 config, scripts 目录到本地
+- 覆盖 src/locales, src/seal-client, src/targets 目录到本地
 - 根据 package.json 的 diff 更改/安装 包
-- 根据 diff 手动更改 browser/index.jsx, intents/index.jsx
-- 根据 diff 封信 locales 内的文件
 
 ## 开发事项
 
@@ -87,26 +90,7 @@ npm build
 
 ### 多语言
 
-#### 接入和使用流程
-
-##### 按照 browser/index.js 类似的方式加入 react-intl
-
-```js
-import { IntlProvider } from 'locales';
-
-const renderApp = function(client, appLocale) {
-  render(
-    <IntlProvider locale={appLocale}>
-      <CozyProvider client={client}>
-        <App />
-      </CozyProvider>
-    </IntlProvider>,
-    document.querySelector('[role=application]')
-  );
-};
-```
-
-##### 用法可参考 example 内的写法， 以及[react-intl](https://github.com/yahoo/react-intl) 在自己的 app 内进行翻译
+##### 用法可参考 [react-intl](https://github.com/yahoo/react-intl) 在自己的 app 内进行翻译
 
 用 react 组件的方式使用
 
