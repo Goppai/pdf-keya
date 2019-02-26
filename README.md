@@ -66,6 +66,8 @@ git remote push [app-repository]
 - src/app/icons 内为 App 自己的 Icon
 - src/app/App|Intent 为 App 的入口组件
 
+Icon 从[favicon-generator](https://www.favicon-generator.org/)生成
+
 ## 升级
 
 ### 如果从 app-template clone 而来
