@@ -1,4 +1,4 @@
-/* global cozy */
+/* global navbar */
 
 import React from 'react';
 import { render } from 'react-dom';
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     require('../manifest.webapp').name
   );
   const appLocale = getDataOrDefault(data.locale, 'zh');
-  cozy.bar.init({
+  navbar.init({
     appSlug: data.appSlug,
     cozyURL,
     token: data.token,

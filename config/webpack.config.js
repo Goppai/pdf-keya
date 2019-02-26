@@ -563,10 +563,6 @@ module.exports = function(webpackEnv) {
           {
             from: paths.appCozyBarCss(),
             to: buildCozyBarCss
-          },
-          {
-            from: paths.appCozyClientJs(),
-            to: buildCozyClientJs
           }
         ]),
       new CopyPlugin([
