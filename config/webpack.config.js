@@ -576,7 +576,7 @@ module.exports = function(webpackEnv) {
       ]),
       isEnvDevelopment &&
         new HtmlWebpackIncludeAssetsPlugin({
-          assets: ['cozy-bar.js', 'cozy-bar.css', 'cozy-client-js.js'],
+          assets: ['cozy-bar.js', 'cozy-bar.css'],
           append: false,
           publicPath: true
         }),
