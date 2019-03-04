@@ -1,184 +1,144 @@
-此模版的目的是 support 所有之后的 Seal App 的开发。 所有的新 Seal App 应当从此模版开始
+# Seal 平台应用开发指导原则
 
-## 引用
+<!-- TOC updateOnSave=false -->
+- [Seal 应用](#seal-应用)
+    - [架构模式](#架构模式)
+    - [应用模板](#应用模板)
+        - [功能介绍](#功能介绍)
+        - [目录结构](#目录结构)
+    - [Manifest](#manifest)
+    - [代码格式/规范](#代码格式规范)
+- [模块](#模块)
+    - [数据服务](#数据服务)
+    - [Intents](#intents)
+    - [权限控制](#权限控制)
+    - [通知系统](#通知系统)
+    - [后台服务](#后台服务)
+- [React](#react)
+<!-- /TOC -->
 
-- 从 [Create React App](https://github.com/facebook/create-react-app) 生成.
-- 参考 [Cozy Scripts](https://github.com/CPatchane/create-cozy-app#readme).
+## Seal 应用
 
-## 结构
+### 架构模式
 
-整个结构从 create-reat-app 生成.
+### 应用模板
 
-### config
-
-由 create-react-app eject 而来， 内含所有路径设置， 以及 webpack 设置.
-
-### scripts
-
-包含所有辅助开发的脚本. 现在有 4 个
-
-- start: 用于开发
-- build: 用于发布
-- test: 用于测试, 目前无测试标准
-- translate: 用于进行多语言文件的生成, 下有详细解释
-
-### src
-
-下面有 4 个子目录:
-
-#### targets
-
-放入口文件, 以下文件不需进行改动， 每个 App 均相同
-
-- manifest.webapp, 这是每个 app 的描述文件, 服务器需读取
-- browser 目录下是通过启动 app 的模式打开的入口文件
-- intents 目录下是通过启动 intents 的模式的入口文件
-
-#### locales
-
-react-intl 的集成， 用于多语言
-
-#### seal-client
-
-Library, 封装了服务端交互相关的逻辑
-
-#### app
-
-App 特有的数据和代码, 此目录下包括所有模版内需要 App 进行特化的代码
-
-## 使用
-
-### 初次使用
-
-#### 克隆
-
+平台所有应用都应当从模板开始, https://git.keyayun.com/keyayun/app-template, 可参考以下步骤
 ```
-git clone git@git.keyayun.com:keyayun/app-template.git [appname]
-git remote rename origin template
-git remote add [app-repository] origin
-git remote push [app-repository]
+mkdir newapp
+cd newapp
+git init
+git pull https://git.keyayun.com/keyayun/app-template master
 ```
 
-#### 更改内容
+#### 功能介绍
 
-- src/app/manifest.webapp
-- src/app/locales 内包含 App 自己的翻译内容
-- src/app/icons 内为 App 自己的 Icon
-- src/app/App|Intent 为 App 的入口组件
+应用模板主要提供以下方面的支持
+* 应用全生命周期管理的脚本与配置, 包含开发/测试/打包发布等
+* 客户端 SDK, 包含通用组件/功能函数, 服务端通信等, 详见 Client SDK
+* 目标平台的接入支持
+* 多语言支持
 
-Icon 从[favicon-generator](https://www.favicon-generator.org/)生成
+#### 目录结构
 
-## 升级
-
-### 如果从 app-template clone 而来
-
-git merge template/master
-
-### 如果通过 copy 文件而来
-
-- 覆盖 config, scripts 目录到本地
-- 覆盖 src/locales, src/seal-client, src/targets 目录到本地
-- 根据 package.json 的 diff 更改/安装 包
-
-## 开发事项
-
-### 开发
-
-npm start
-
-### 发布
-
-npm build
-
-### 多语言
-
-##### 用法可参考 [react-intl](https://github.com/yahoo/react-intl) 在自己的 app 内进行翻译
-
-用 react 组件的方式使用
-
-```js
-import React from 'react';
-import { FormattedMessage } from 'react-intl';
-
-export const Hello1 = () => (
-  <p>
-    <FormattedMessage
-      id="example.Hello1"
-      defaultMessage="Just... Hello world! This is a first hello view"
-    />
-  </p>
-);
+```
+├── config                   // webpack/jest 配置
+├── scripts                  // start/build/test 脚本
+├── src
+│   ├── app                  // app 所有代码/资源所属目录
+│   │   ├── App.jsx          // 主应用的入口
+│   │   ├── Intent.jsx       // 组件的入口
+│   │   ├── icons            // 图标
+│   │   ├── locales          // 多语言相关资源
+│   │   └── manifest.webapp  // 应用的 manifest, 详见 Manifest
+│   ├── locales              // 多语言的支持代码
+│   ├── react-app-env.d.ts
+│   ├── seal-client          // 客户端 SDK
+│   └── targets              // 输出目标. App 和组件
+│       ├── browser
+│       └── intents
+├── package.json
+├── tsconfig.json            // Typescript 配置
+├── .prettierrc              // Prettier 配置
 ```
 
-用 formatMessage 函数的方式使用
+### Manifest
 
-```js
-import { injectIntl, defineMessages } from 'react-intl';
-const messages = defineMessages({
-  delete: {
-    id: 'example.delete',
-    defaultMessage: 'Delete'
-  }
-});
-class TodoRemoveButton extends Component {
-  render() {
-    const { formatMessage } = this.props.intl;
-    return <div label={formatMessage(messages.delete)} />;
+**Manifest** 描述应用的元信息(**Metadata**), 包含应用的基本属性/功能/权限等, JSON 格式, 具体如下:
+* 主要项(必填)
+	1. **name**: 应用名字, 与 locale 配合可多语言化.
+	2. **slug**: 应用标识, [a-z]. 用户通过 slug 访问应用, 例如应用的 slug 是 drive, 则可通过 drive.inst.company.com 访问. slug *全局唯一*.
+	3. **version**: 版本号. 依据 [Semantic](https://semver.org/) 规则
+	4. **icons**: 边长为2的次幂的正方形,支持多种尺寸. **128x128** 必选, 512x512 和 32x32 推荐, 分别用于应用商店中的展示, 以及页面的 favicon.
+	5. **description**: 应用描述, 不超过 30 字, 支持多语言
+	6. **locales**: name/description 等应用安装前需要多语言支持的字段的翻译
+	7. **langs**: 应用支持的语言, ISO 639 标准
+	8. **routes**: 指定资源的路径(name: /path/to/assets)和可访问性(access: private/public), 其中 **index** 是一种特殊资源, 默认指向 index.html, 当应用请求 index 时, server 会尝试将 token 等信息插入并返回.
+	9. **permissions**: 详见 [权限控制](#权限控制)
+	10. **notifications**: 详见 [通知系统](#通知系统)
+	11. **services**: 详见 [后台服务](#后台服务)
+	12. **doctypes**: 自定义文档服务. 详见 [数据服务](#数据服务)
+	13. **intents**: 小组件. 详见 [Intents](#Intents)
+* 次要项(可不填)
+	1. name_prefix: 不为空时, 应用的全称会展示为 {prefix} - {name}, 如 **Seal - 文件管理**
+	2. category: 分类
+	3. long_description: 应用长描述, 推荐 200 字以内
+	4. platforms: 应用在各平台的链接, iOS/Android/Mac/Windows, etc.
+	5. screenshots: 应用在应用商店中的展示图
+	6. developer: 开发者
+	7. license: 许可
+
+> 主要参考
+>
+> [FirefoxOS App 标准](https://developer.mozilla.org/en-US/docs/Archive/B2G_OS/Firefox_OS_apps/Building_apps_for_Firefox_OS/Manifest)
+>
+> [Web App Manifest 标准](https://www.w3.org/TR/appmanifest/)
+
+### 代码格式/规范
+
+## 模块
+
+### 数据服务
+
+形如
+```json
+{
+  // 文档类型
+  "keyayun.service.test": {
+    // unique 属性只能有一个
+    "unique": "name",
+    // 一个 index 可以包含多个属性
+    // 如果 index 中只有一个属性, 那这个属性不能和 unique 中定义的重名
+    "index": {
+      "two-fields": [ "first", "second" ]
+    },
+    "view": {
+      "sort-by-third": {
+        // 必填, 必须以 "function map(doc)" 开始
+        "map": `function map(doc) {
+                  emit(doc.third, doc.third);
+                }`,
+        // 可以为空
+        "reduce": "_sum"
+      }
+    }
   }
 }
-
-// get mutations from the client to use deleteDocument
-export default injectIntl(withMutations()(TodoRemoveButton));
 ```
+1. 数据服务支持应用自定义文档类型, 文档类型采用 [UTI](https://en.wikipedia.org/wiki/Uniform_Type_Identifier) (a.k.a. [rDNS](https://en.wikipedia.org/wiki/Reverse_domain_name_notation)) 命名方式, 如 **keyayun.service.files**
+2. 文档类型名称要求全局唯一. 建议结合 **slug** 取名, 以保证唯一性.
+3. 应用可以为每种数据定义一个 **unique** 属性 , unique 属性必须为**字符串类型**, 保证**全局唯一**取值
+4. 应用可以自定义 **Index/View** 以辅助数据检索
+5. **Index** 定义支持多个字段, 查询语法与 [**Mango**](https://github.com/cloudant/mango) 兼容. 当 index 只包含一个属性, 且与 unique 相同时, 会被忽略
+6. **View** 与 [CouchDB **MapReduce**](http://docs.couchdb.org/en/latest/ddocs/ddocs.html#view-functions) 兼容. View 函数的签名必须为 **`function map(doc)`**.
+7. 数据服务 API 使用说明见 [相关文档](../../../../../service/src/branch/master/docs/data.md#data-api-详细设计-version-1)
 
-#### 翻译流程
+### Intents
 
-翻译有两种流程:
-第一种是开发定义 id. 第二种是产品定义 id.
+### 权限控制
 
-##### 开发定义 id
+### 通知系统
 
-- 好处
+### 后台服务
 
-  1. 开发对于产品的依赖在于设计图和文档， 不需要有翻译 id 的依赖
-  2. 当出现多行的文本的时候， 开发更容易把握将翻译分为几行
-  3. 部分翻译需要有变量介入， 开发更容易写出合适的原始翻译文本， 翻译内容需涵盖变量
-
-- 坏处
-
-  1. 当翻译出现问题的时候， 不容易界定错误在于开发还是产品
-  2. 翻译进行更改的时候， 需要进行人工 merge
-
-- 使用流程
-  1. 调用 yarn build && yarn langs 来生成并更新 src/locales/template.json 文件
-  2. 按照 template.json 内的对应内容， copy 到新的语言文件， 进行翻译， 比如翻译为 src/locales/data/zh.json
-
-##### 产品定义 id
-
-好处还坏处和 开发定义 id 正好相反
-
-- 使用流程
-
-  1. 产品生成所有翻译的.json 文件
-  2. 开发负责定期更新文件到 repository 中
-  3. 开发直接使用产品翻译好的.json 文件， 不跑 yarn langs 脚本.
-
-- 结论
-
-两种模式各有优缺点， 但是可以很容易互相转换， 并没有严格的冲突， 所以可以采用项目合适的方法和习惯进行开发.
-defineMessages 不是必须的操作， 但是为了后期的维护性， 推荐使用.
-
-#### 原则
-
-- 所有的 message 由开发决定， 包括 id 和 default 值
-- 所有的 message 定义在所在 feature 相关的目录/文件
-- code 内所有文件可以直接引用 react-intl
-- 源码决定 message id 和 default 值, 脚本负责收集 template.json, 翻译集中在一个地方
-
-### prettierrc
-
-请配置 code 的 prettier, 这样可以通过工具保证代码风格的一致
-
-### css
-
-推荐使用 styled-components 进行 css 覆盖写法, 尽可能不在 code 内写 style={{width: 80}}这样的内容
+## React
