@@ -131,7 +131,7 @@ git pull https://git.keyayun.com/keyayun/app-template master
 4. 应用可以自定义 **Index/View** 以辅助数据检索
 5. **Index** 定义支持多个字段, 查询语法与 [**Mango**](https://github.com/cloudant/mango) 兼容. 当 index 只包含一个属性, 且与 unique 相同时, 会被忽略
 6. **View** 与 [CouchDB **MapReduce**](http://docs.couchdb.org/en/latest/ddocs/ddocs.html#view-functions) 兼容. View 函数的签名必须为 **`function map(doc)`**.
-7. 数据服务 API 使用说明见 [相关文档](../../../../../service/src/branch/master/docs/data.md#data-api-详细设计-version-1)
+7. 数据服务 API 使用说明见 [相关文档](../../../../service/src/branch/master/docs/data.md#data-api-详细设计-version-1)
 
 ### Intents
 
