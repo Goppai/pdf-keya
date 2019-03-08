@@ -82,8 +82,10 @@ module.exports = {
   appNodeModules: resolveApp('node_modules'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json')),
-  appCozyBarJs: () => resolveApp('node_modules/cozy-bar/dist/cozy-bar.js'),
-  appCozyBarCss: () => resolveApp('node_modules/cozy-bar/dist/cozy-bar.css'),
+  appCozyBarJs: dev =>
+    resolveApp(`node_modules/cozy-bar/dist/cozy-bar.${dev ? '' : 'min.'}js`),
+  appCozyBarCss: dev =>
+    resolveApp(`node_modules/cozy-bar/dist/cozy-bar.${dev ? '' : 'min.'}css`),
   appCozyClientJs: () =>
     resolveApp('node_modules/cozy-client-js/dist/cozy-client.js'),
   appManifest: () => resolveApp('src/app/manifest.webapp'),

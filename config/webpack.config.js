@@ -553,17 +553,16 @@ module.exports = function(webpackEnv) {
               : undefined
           )
         ),
-      isEnvDevelopment &&
-        new CopyPlugin([
-          {
-            from: paths.appCozyBarJs(),
-            to: buildCozyBarJs
-          },
-          {
-            from: paths.appCozyBarCss(),
-            to: buildCozyBarCss
-          }
-        ]),
+      new CopyPlugin([
+        {
+          from: paths.appCozyBarJs(isEnvDevelopment),
+          to: buildCozyBarJs
+        },
+        {
+          from: paths.appCozyBarCss(isEnvDevelopment),
+          to: buildCozyBarCss
+        }
+      ]),
       new CopyPlugin([
         {
           from: manifestWebApp,
@@ -574,12 +573,11 @@ module.exports = function(webpackEnv) {
           to: paths.appBuild
         }
       ]),
-      isEnvDevelopment &&
-        new HtmlWebpackIncludeAssetsPlugin({
-          assets: ['cozy-bar.js', 'cozy-bar.css'],
-          append: false,
-          publicPath: true
-        }),
+      new HtmlWebpackIncludeAssetsPlugin({
+        assets: ['cozy-bar.js', 'cozy-bar.css'],
+        append: false,
+        publicPath: true
+      }),
       new WriteFilePlugin({
         test: /\.(html|webapp)$/
         // Write only files that have ".html" extension.
