@@ -41,6 +41,11 @@
       "type": "io.cozy.apps",
       "verbs": ["GET"]
     },
+    "profiles": {
+      "description": "Required to manage your profiles",
+      "type": "keyayun.seal.profiles",
+      "verbs": ["GET"]
+    },
     "test": {
       "description": "",
       "type": "keyayun.service.test"
