@@ -7,7 +7,7 @@ import { IntlProvider } from 'locales';
 import { Client, ClientProvider } from 'seal-client/client';
 
 import App from 'app/App';
-import appIcon from '../../app/icons/favicon-32x32.png';
+import appIcon from '../../app/icons/favicon.png';
 
 const renderApp = function(client, appLocale) {
   render(

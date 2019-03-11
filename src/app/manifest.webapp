@@ -1,16 +1,34 @@
 {
   "name": "Test",
   "slug": "test",
-  "icon": "favicon-32x32.png",
-  "categories": [],
+  "icon": "icon.svg",
+  "type": "webapp",
+  "categories": ["keyayun"],
   "version": "0.1.0",
   "licence": "CURACLOUD-1.0",
   "editor": "",
   "source": "https://github.com/keyayun/test.git@latest",
+  "editor": "keyayun",
   "developer": {
     "name": "keyayun",
     "url": "https://github.com/keyayun"
   },
+  "locales": {
+    "en": {
+      "name": "Test"
+    },
+    "zh-Hant-HK": {
+      "name": "測試"
+    },
+    "zh": {
+      "name": "测试"
+    }
+  },
+  "langs": [
+    "en",
+    "zh-Hant-HK",
+    "zh"
+  ],
   "routes": {
     "/": {
       "folder": "/",
@@ -37,7 +55,7 @@
   },
   "permissions": {
     "apps": {
-      "description": "Required by the cozy-bar to display the icons of the apps",
+      "description": "Required by the nav bar to display the icons of the apps",
       "type": "io.cozy.apps",
       "verbs": ["GET"]
     },
