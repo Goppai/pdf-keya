@@ -21,9 +21,16 @@
 
 ### 架构模式
 
+- Seal 应用是基于 Seal 平台提供的服务打造的 Webapp
+- 无需安装, 可直接通过浏览器使用
+- 通过 seal-client-sdk 访问平台服务
+- 应用之间可以通过 Intent 交互; 应用可以利用其他应用的 Intent 处理数据或访问 Seal 平台的服务, 也可以通过 Intent 将另外一个应用嵌入到当前应用中
+- Seal 平台提供应用商店服务, 用户通过应用商店可以安装/升级/卸载应用(*暂未实现*)
+
+
 ### 应用模板
 
-平台所有应用都应当从模板开始, https://git.keyayun.com/keyayun/app-template, 可参考以下步骤
+平台所有应用都应当使用 [应用模板(app-template)](https://git.keyayun.com/keyayun/app-template) 开发, 具体可参考以下步骤
 ```
 mkdir newapp
 cd newapp
@@ -95,6 +102,10 @@ git pull https://git.keyayun.com/keyayun/app-template master
 > [Web App Manifest 标准](https://www.w3.org/TR/appmanifest/)
 
 ### 代码格式/规范
+
+#### 目录结构
+
+#### 代码规范
 
 ## 模块
 
