@@ -1,0 +1,16 @@
+{
+  "presets": [
+    "react-app"
+  ],
+  "plugins": [
+    [
+      "module-resolver", {
+        "cwd": "./sdk/seal-client/origin/",
+        "alias": {
+          "cozy-client": "./packages/cozy-client/src",
+          "cozy-stack-client": "./packages/cozy-stack-client/src"
+        }
+      }
+    ]
+  ]
+}
