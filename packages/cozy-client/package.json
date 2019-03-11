@@ -1,0 +1,34 @@
+{
+  "name": "cozy-client",
+  "version": "6.9.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cozy/cozy-client.git"
+  },
+  "dependencies": {
+    "cozy-device-helper": "1.6.3",
+    "cozy-stack-client": "^6.7.0",
+    "lodash": "4.17.11",
+    "prop-types": "15.6.2",
+    "react": "16.7.0",
+    "react-redux": "5.0.7",
+    "redux": "3.7.2",
+    "redux-thunk": "2.3.0",
+    "sift": "6.0.0"
+  },
+  "scripts": {
+    "build": "../../bin/build",
+    "watch": "yarn run build --watch",
+    "prepublishOnly": "yarn run build"
+  },
+  "devDependencies": {
+    "babel-cli": "6.26.0",
+    "mockdate": "^2.0.2"
+  },
+  "sideEffects": false
+}

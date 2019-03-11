@@ -1,0 +1,4 @@
+{
+  "presets": [["cozy-app", { "transformRegenerator": false }]],
+  "plugins": ["transform-runtime"]
+}

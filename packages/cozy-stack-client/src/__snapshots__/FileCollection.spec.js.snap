@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FileCollection findReferencedBy should pass all the filters 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "GET",
+      "/data/io.cozy.files/123/relationships/references?include=files&sort=datetime",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": Object {
+        "data": Array [],
+        "meta": Object {},
+      },
+    },
+  ],
+}
+`;
+
+exports[`FileCollection updateFileMetadata should call the right route 1`] = `
+Array [
+  "PATCH",
+  "/files/42",
+  Object {
+    "data": Object {
+      "attributes": Object {
+        "dir_id": "123",
+      },
+      "id": "42",
+      "type": "io.cozy.files",
+    },
+  },
+]
+`;
