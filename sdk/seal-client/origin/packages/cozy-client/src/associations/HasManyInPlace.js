@@ -1,5 +1,5 @@
 import Association from './Association'
-import Query from '../queries/dsl'
+import { QueryDefinition } from '../queries/dsl'
 
 /**
  *
@@ -84,7 +84,7 @@ class HasManyInPlace extends Association {
 
   static query() {
     if (this.raw && this.raw.length > 0) {
-      return Query({ doctype: this.doctype, ids: this.raw })
+      return new QueryDefinition({ doctype: this.doctype, ids: this.raw })
     } else {
       return null
     }
