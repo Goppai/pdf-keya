@@ -1,4 +1,4 @@
-import Client, { CozyProvider } from 'cozy-client';
+import Client, { CozyProvider } from './origin';
 
 const ClientProvider = CozyProvider;
 
