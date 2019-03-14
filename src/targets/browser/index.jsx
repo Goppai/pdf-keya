@@ -9,9 +9,9 @@ import { Client, ClientProvider } from 'seal-client/client';
 import App from 'app/App';
 import appIcon from '../../app/icons/favicon.png';
 
-const renderApp = function(client, appLocale) {
+const renderApp = function(client, appLocale, timeZone) {
   render(
-    <IntlProvider locale={appLocale}>
+    <IntlProvider locale={appLocale} timeZone={timeZone}>
       <ClientProvider client={client}>
         <App />
       </ClientProvider>
@@ -40,19 +40,18 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const iconPath = getDataOrDefault(data.iconPath, appIcon);
-  const appName = getDataOrDefault(
-    data.appName,
-    require('../../app/manifest.webapp').name
-  );
+  const appName = getDataOrDefault(data.appName, require('../../app/manifest.webapp').name);
   const appLocale = getDataOrDefault(data.locale, 'zh');
+  const timeZone = getDataOrDefault(data.timeZone, '');
   navbar.init({
     appSlug: data.appSlug,
     cozyURL,
     token: data.token,
     appName: appName,
     iconPath,
-    lang: appLocale
+    lang: appLocale,
+    timeZone: timeZone,
   });
 
-  renderApp(client, appLocale);
+  renderApp(client, appLocale, timeZone);
 });
