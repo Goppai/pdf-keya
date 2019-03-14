@@ -19,16 +19,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const data = root.dataset;
 
   const appLocale = getDataOrDefault(data.locale, 'zh');
-  const protocol = window.location ? window.location.protocol : 'https:';
+  const timeZone = getDataOrDefault(data.timeZone, '');
 
   // initialize the client to interact with the cozy stack
+  const protocol = window.location ? window.location.protocol : 'https:';
   const client = new Client({
     uri: `${protocol}//${data.domain}`,
     token: data.token
   });
 
   render(
-    <IntlProvider locale={appLocale}>
+    <IntlProvider locale={appLocale} timeZone={timeZone}>
       <ClientProvider client={client}>
         <IntentHandler client={client}>
           <IFrame>
