@@ -7,6 +7,7 @@
         - [功能介绍](#功能介绍)
         - [目录结构](#目录结构)
     - [Manifest](#manifest)
+        - [应用图标](#应用图标)
     - [代码格式/规范](#代码格式规范)
 - [模块](#模块)
     - [数据服务](#数据服务)
@@ -27,7 +28,6 @@
 - 应用之间可以通过 Intent 交互; 应用可以利用其他应用的 Intent 处理数据或访问 Seal 平台的服务, 也可以通过 Intent 将另外一个应用嵌入到当前应用中
 - Seal 平台提供应用商店服务, 用户通过应用商店可以安装/升级/卸载应用(*暂未实现*)
 
-
 ### 应用模板
 
 平台所有应用都应当使用 [应用模板(app-template)](https://git.keyayun.com/keyayun/app-template) 开发, 具体可参考以下步骤
@@ -41,6 +41,7 @@ git pull https://git.keyayun.com/keyayun/app-template master
 #### 功能介绍
 
 应用模板主要提供以下方面的支持
+
 * 应用全生命周期管理的脚本与配置, 包含开发/测试/打包发布等
 * 客户端 SDK, 包含通用组件/功能函数, 服务端通信等, 详见 Client SDK
 * 目标平台的接入支持
@@ -72,7 +73,9 @@ git pull https://git.keyayun.com/keyayun/app-template master
 ### Manifest
 
 **Manifest** 描述应用的元信息(**Metadata**), 包含应用的基本属性/功能/权限等, JSON 格式, 具体如下:
-* 主要项(必填)
+
+- 主要项(必填)
+
 	1. **name**: 应用名字, 与 locale 配合可多语言化.
 	2. **slug**: 应用标识, [a-z]. 用户通过 slug 访问应用, 例如应用的 slug 是 drive, 则可通过 drive.inst.company.com 访问. slug *全局唯一*.
 	3. **version**: 版本号. 依据 [Semantic](https://semver.org/) 规则
@@ -86,7 +89,9 @@ git pull https://git.keyayun.com/keyayun/app-template master
 	11. **services**: 详见 [后台服务](#后台服务)
 	12. **doctypes**: 自定义文档服务. 详见 [数据服务](#数据服务)
 	13. **intents**: 小组件. 详见 [Intents](#Intents)
-* 次要项(可不填)
+
+- 次要项(可不填)
+
 	1. name_prefix: 不为空时, 应用的全称会展示为 {prefix} - {name}, 如 **Seal - 文件管理**
 	2. category: 分类
 	3. long_description: 应用长描述, 推荐 200 字以内
@@ -100,6 +105,13 @@ git pull https://git.keyayun.com/keyayun/app-template master
 > [FirefoxOS App 标准](https://developer.mozilla.org/en-US/docs/Archive/B2G_OS/Firefox_OS_apps/Building_apps_for_Firefox_OS/Manifest)
 >
 > [Web App Manifest 标准](https://www.w3.org/TR/appmanifest/)
+
+#### 应用图标
+
+由 svg 生成 png 图标可使用
+- https://ezgif.com/svg-to-png, 可将 svg 转化为背景透明的 png
+- https://iconifier.net/, 可生成 iOS 全系列 apple-touch-icon, 但**不支持SVG**
+- https://www.favicon-generator.org/, 可生成 iOS/Android/Windows 全系列 icon, 但**不支持SVG**
 
 ### 代码格式/规范
 
