@@ -116,6 +116,17 @@ async function start(client, intentId, serviceWindow) {
     terminate({ type: `intent-${intent.id}:cancel` })
   };
 
+  const message = (data) => {
+    if (terminated) {
+      throw new Error('Intent service has been terminated');
+    }
+
+    sendMessage({
+      data,
+      type: `intent-${intent.id}:message`,
+    });
+  }
+
   // Prevent unfulfilled client promises when this window unloads for a
   // reason or another.
   serviceWindow.addEventListener('unload', () => {
@@ -126,26 +137,23 @@ async function start(client, intentId, serviceWindow) {
 
   const data = await listenClientData(intent, serviceWindow);
   return {
-    compose: compose,
+    cancel,
+    compose,
+    message,
+    resizeClient,
     getData: () => data,
     getIntent: () => intent,
     terminate: doc => {
-      const eventName =
-        data && data.exposeIntentFrameRemoval
-          ? 'exposeFrameRemoval'
-          : 'done';
+      const eventName = data && data.exposeIntentFrameRemoval ? 'exposeFrameRemoval': 'done';
       return terminate({
         type: `intent-${intent.id}:${eventName}`,
         document: doc
       });
     },
-    throw: error =>
-      terminate({
-        type: `intent-${intent.id}:error`,
-        error: errorSerializer.serialize(error)
-      }),
-    resizeClient: resizeClient,
-    cancel: cancel,
+    throw: error => terminate({
+      type: `intent-${intent.id}:error`,
+      error: errorSerializer.serialize(error)
+    }),
   };
 }
 
