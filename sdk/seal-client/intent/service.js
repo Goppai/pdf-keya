@@ -129,11 +129,13 @@ async function start(client, intentId, serviceWindow) {
 
   // Prevent unfulfilled client promises when this window unloads for a
   // reason or another.
-  serviceWindow.addEventListener('unload', () => {
-    if (!terminated) {
-      cancel();
-    }
-  });
+  if (process.env.NODE_ENV !== 'development') {
+    serviceWindow.addEventListener('unload', () => {
+      if (!terminated) {
+        cancel();
+      }
+    });
+  }
 
   const data = await listenClientData(intent, serviceWindow);
   return {
