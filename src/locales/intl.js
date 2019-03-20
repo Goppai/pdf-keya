@@ -11,10 +11,6 @@ addLocaleData([...zh, ...en]);
 const { Provider, Consumer } = React.createContext();
 
 class IntlProviderWrapper extends React.Component {
-
-  switchLanguage = locale => this.setState({ locale });
-  switchTimeZone = timeZone => this.setState({ timeZone });
-  
   constructor(...args) {
     super(...args);
 
@@ -27,10 +23,14 @@ class IntlProviderWrapper extends React.Component {
     };
   }
 
+  switchLanguage = locale => this.setState({ locale });
+
+  switchTimeZone = timeZone => this.setState({ timeZone });
+
   render() {
     const { children } = this.props;
     const { locale, timeZone } = this.state;
-    const validLocale = !!messages[locale] ? locale : 'zh';
+    const validLocale = messages[locale] ? locale : 'zh';
     return (
       <Provider value={this.state}>
         <IntlProvider

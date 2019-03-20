@@ -6,11 +6,11 @@ module.exports = {
         useBuiltIns: 'false',
         corejs: 'core-js@3',
         targets: {
-          chrome: 73
-        }
-      }
+          chrome: 73,
+        },
+      },
     ],
-    '@babel/preset-react'
+    '@babel/preset-react',
   ],
   plugins: [
     '@babel/plugin-proposal-class-properties',
@@ -21,14 +21,14 @@ module.exports = {
       {
         libraryName: 'antd',
         libraryDirectory: 'es',
-        style: 'css'
-      }
-    ]
+        style: 'css',
+      },
+    ],
   ],
   overrides: [
     {
       test: /\.tsx?$/,
-      plugins: [['@babel/plugin-proposal-decorators', { legacy: true }]]
-    }
-  ]
+      plugins: [['@babel/plugin-proposal-decorators', { legacy: true }]],
+    },
+  ],
 };
