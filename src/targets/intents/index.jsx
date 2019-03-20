@@ -8,7 +8,7 @@ import { IFrame, IntentHandler } from 'seal-client/intent';
 import Intent from 'app/Intent';
 
 // return a defaultData if the template hasn't been replaced by cozy-stack
-const getDataOrDefault = function(toTest, defaultData) {
+const getDataOrDefault = (toTest, defaultData) => {
   const templateRegex = /^\{\{\.[a-zA-Z]*\}\}$/; // {{.Example}}
   return templateRegex.test(toTest) ? defaultData : toTest;
 };
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const protocol = window.location ? window.location.protocol : 'https:';
   const client = new Client({
     uri: `${protocol}//${data.domain}`,
-    token: data.token
+    token: data.token,
   });
 
   render(
@@ -38,6 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </IntentHandler>
       </ClientProvider>
     </IntlProvider>,
-    document.querySelector('[role=application]')
+    document.querySelector('[role=application]'),
   );
 });

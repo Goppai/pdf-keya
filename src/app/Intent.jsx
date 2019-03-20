@@ -8,13 +8,10 @@ const mapMessageToProps = data => {
 
 const Intent = props => {
   // TODO: Replace this div with intent component
-  return (
-    <div
-      {...props}
-    >
-      Intent
-    </div>
-  );
+  return <div {...props}>Intent</div>;
 };
 
-export default fp.compose(Intent, mapMessageToProps);
+export default fp.compose(
+  Intent,
+  mapMessageToProps,
+);

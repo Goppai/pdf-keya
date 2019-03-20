@@ -1,0 +1,23 @@
+{
+  "extends": ["airbnb", "prettier", "prettier/babel", "prettier/react"],
+  "parser": "babel-eslint",
+  "plugins": ["react-hooks", "prettier"],
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "prettier/prettier": "error"
+  },
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "jest": true,
+    "node": true
+  },
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "config/webpack.config.js"
+      }
+    }
+  }
+}

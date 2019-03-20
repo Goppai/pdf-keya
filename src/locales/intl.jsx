@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { addLocaleData, IntlProvider } from 'react-intl';
 
 import en from 'react-intl/locale-data/en';
@@ -11,15 +12,24 @@ addLocaleData([...zh, ...en]);
 const { Provider, Consumer } = React.createContext();
 
 class IntlProviderWrapper extends React.Component {
+  static propTypes = {
+    locale: PropTypes.string.isRequired,
+    timeZone: PropTypes.string.isRequired,
+    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
+  };
+
   constructor(...args) {
     super(...args);
 
-    // pass everything in state to avoid creating object inside render method (like explained in the documentation)
+    const { locale, timeZone } = this.props;
+
+    // pass everything in state to avoid creating object inside
+    // render method (like explained in the documentation)
     this.state = {
-      locale: this.props.locale,
-      timeZone: this.props.timeZone || '',
-      switchLanguage: this.switchLanguage,
-      switchTimeZone: this.switchTimeZone,
+      locale,
+      timeZone: timeZone || '',
+      // switchLanguage: this.switchLanguage,
+      // switchTimeZone: this.switchTimeZone,
     };
   }
 

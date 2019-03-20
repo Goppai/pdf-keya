@@ -24,6 +24,12 @@ module.exports = {
         style: 'css',
       },
     ],
+    [
+      'module-resolver',
+      {
+        root: ['./src'],
+      },
+    ],
   ],
   overrides: [
     {

@@ -8,20 +8,21 @@ import { Client, ClientProvider } from 'seal-client/client';
 
 import App from 'app/App';
 import appIcon from '../../app/icons/favicon.png';
+import manifest from '../../app/manifest.webapp';
 
-const renderApp = function(client, appLocale, timeZone) {
+const renderApp = (client, appLocale, timeZone) => {
   render(
     <IntlProvider locale={appLocale} timeZone={timeZone}>
       <ClientProvider client={client}>
         <App />
       </ClientProvider>
     </IntlProvider>,
-    document.querySelector('[role=application]')
+    document.querySelector('[role=application]'),
   );
 };
 
 // return a defaultData if the template hasn't been replaced by service
-const getDataOrDefault = function(toTest, defaultData) {
+const getDataOrDefault = (toTest, defaultData) => {
   const templateRegex = /^\{\{\.[a-zA-Z]*\}\}$/; // {{.Example}}
   return templateRegex.test(toTest) ? defaultData : toTest;
 };
@@ -36,21 +37,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const cozyURL = `${protocol}//${data.domain}`;
   const client = new Client({
     uri: cozyURL,
-    token: data.token
+    token: data.token,
   });
 
   const iconPath = getDataOrDefault(data.iconPath, appIcon);
-  const appName = getDataOrDefault(data.appName, require('../../app/manifest.webapp').name);
+  const appName = getDataOrDefault(data.appName, manifest.name);
   const appLocale = getDataOrDefault(data.locale, 'zh');
   const timeZone = getDataOrDefault(data.timeZone, '');
   navbar.init({
     appSlug: data.appSlug,
     cozyURL,
     token: data.token,
-    appName: appName,
+    appName,
     iconPath,
     lang: appLocale,
-    timeZone: timeZone,
+    timeZone,
   });
 
   renderApp(client, appLocale, timeZone);
