@@ -361,14 +361,6 @@ module.exports = function(webpackEnv) {
                     }
                   ],
                   [
-                    require.resolve('babel-plugin-import'),
-                    {
-                      libraryName: 'antd',
-                      libraryDirectory: 'es',
-                      style: 'css'
-                    }
-                  ],
-                  [
                     require.resolve('babel-plugin-react-intl'),
                     {
                       messagesDir: './src/locales/output'
