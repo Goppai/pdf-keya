@@ -31,17 +31,19 @@
       content="width=device-width, height=device-height, initial-scale=1, viewport-fit=cover"
     />
   </head>
-  <div
-    role="application"
-    data-token="{{.Token}}"
-    data-domain="{{.Domain}}"
-    data-locale="{{.Locale}}"
-    data-app-name="{{.AppName}}"
-    data-app-slug="{{.AppSlug}}"
-    data-app-name-prefix="{{.AppNamePrefix}}"
-    data-app-editor="{{.AppEditor}}"
-    data-icon-path="{{.IconPath}}"
-    data-time-zone="{{.TimeZone}}"
-  >
-  </div>
+  <body style="min-height: 650px; min-width: 1200px; overflow: auto;">
+    <div
+      role="application"
+      data-token="{{.Token}}"
+      data-domain="{{.Domain}}"
+      data-locale="{{.Locale}}"
+      data-app-name="{{.AppName}}"
+      data-app-slug="{{.AppSlug}}"
+      data-app-name-prefix="{{.AppNamePrefix}}"
+      data-app-editor="{{.AppEditor}}"
+      data-icon-path="{{.IconPath}}"
+      data-time-zone="{{.TimeZone}}"
+    >
+    </div>
+  </body>
 </html>
