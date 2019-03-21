@@ -6,7 +6,7 @@ module.exports = {
         useBuiltIns: 'false',
         corejs: 'core-js@3',
         targets: {
-          chrome: 73,
+          chrome: 68,
         },
       },
     ],

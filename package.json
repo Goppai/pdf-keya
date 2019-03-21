@@ -100,9 +100,10 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js && npm run langs",
+    "build": "node scripts/build.js && yarn services && yarn langs",
     "test": "node scripts/test.js",
-    "langs": "node scripts/translate.js"
+    "langs": "node scripts/translate.js",
+    "services": "node scripts/buildservices.js"
   },
   "browserslist": [
     ">0.2%",
