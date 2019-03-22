@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 function mapErrorProperties(from, to) {
   const result = Object.assign(to, from);

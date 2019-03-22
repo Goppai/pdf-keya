@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 
-import { start } from './service'
+import { start } from './service';
 
 const IntentHandler = props => {
-  const { intentId, children, client, ...rest } = props
-  const [ data, setData ] = useState({});
+  const { intentId, children, client, ...rest } = props;
+  const [data, setData] = useState({});
 
   const loadIntent = async () => {
     if (data.service) {
@@ -13,29 +13,28 @@ const IntentHandler = props => {
 
     try {
       const service = await start(client.stackClient, intentId, window);
-      const { type, ...rest } = service.getData();
+      const { type, ...r } = service.getData();
       if (type.includes('data')) {
-        setData({ service, ...rest });
+        setData({ service, ...r });
       } else {
         setData({ service });
       }
     } catch (error) {
-      throw(error)
+      throw error;
     }
   };
 
   useEffect(() => {
     loadIntent();
     return () => {};
-  }, [data]); 
+  }, [data]);
 
   if (!data.service) {
-    return (<div id="intent_placeholder"/>);
-  } 
+    return <div id="intent_placeholder" />;
+  }
 
   return React.cloneElement(children, { ...rest, ...data });
-}
-
-export {
-  IntentHandler,
 };
+
+// eslint-disable-next-line import/prefer-default-export
+export { IntentHandler };
