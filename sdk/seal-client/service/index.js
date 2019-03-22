@@ -1,6 +1,10 @@
-import 'isomorphic-fetch'
+import fetch from 'node-fetch';
+
 import Client from '../origin/packages/cozy-stack-client/src/CozyStackClient';
 
+if (global.fetch == null) {
+  global.fetch = fetch;
+}
 
 const credentials = process.env.COZY_CREDENTIALS.trim();
 const cozyURL = process.env.COZY_URL;
