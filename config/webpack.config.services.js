@@ -1,6 +1,16 @@
 const paths = require('./paths');
+const webpack = require('webpack');
+const resolve = require('resolve');
 const TerserPlugin = require('terser-webpack-plugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
+const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
+const getClientEnvironment = require('./env');
+const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin-alt');
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
+
+const useTypeScript = true
 
 module.exports = function(webpackEnv, entry) {
   const isEnvDevelopment = webpackEnv === 'development';
@@ -10,18 +20,23 @@ module.exports = function(webpackEnv, entry) {
     ? paths.servedPath
     : isEnvDevelopment && '/';
 
+  const publicUrl = isEnvProduction
+    ? publicPath.slice(0, -1)
+    : isEnvDevelopment && '';
+  const env = getClientEnvironment(publicUrl);
+
   return {
+    target: 'node',
+    mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     devtool: isEnvProduction
-    ? shouldUseSourceMap
-      ? 'source-map'
-      : false
+    ? false
     : isEnvDevelopment && 'cheap-module-source-map',
     entry,
     output: {
       path: paths.appBuild,
       pathinfo: isEnvDevelopment,
       publicPath,
-      filename: '[name].js'
+      filename: 'service.js'
     },
     optimization: {
       minimize: isEnvProduction,
@@ -51,15 +66,15 @@ module.exports = function(webpackEnv, entry) {
           cache: true,
           sourceMap: false
         })
-      ],
-      plugins: [
-        new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson])
       ]
     },
     resolve: {
       modules: [paths.appSrc, paths.sdk, 'node_modules'],
       extensions: paths.moduleFileExtensions
-        .map(ext => `.${ext}`)
+        .map(ext => `.${ext}`),
+      plugins: [
+        new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson])
+      ]
     },
     module: {
       strictExportPresence: true,
@@ -98,11 +113,6 @@ module.exports = function(webpackEnv, entry) {
                 babelrc: false,
                 configFile: false,
                 compact: false,
-                presets: [
-                  [
-                    { helpers: true }
-                  ]
-                ],
                 cacheDirectory: true,
                 cacheCompression: isEnvProduction,
                 sourceMaps: false
@@ -114,7 +124,9 @@ module.exports = function(webpackEnv, entry) {
     },
     plugins: [
       new ModuleNotFoundPlugin(paths.appPath),
-      new webpack.DefinePlugin(env.stringified),
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(webpackEnv)
+      }),
       isEnvDevelopment && new CaseSensitivePathsPlugin(),
       isEnvDevelopment &&
         new WatchMissingNodeModulesPlugin(paths.appNodeModules),

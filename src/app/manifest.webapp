@@ -53,6 +53,14 @@
 
     }
   },
+  "services": {
+    "service": {
+      "type": "node",
+      "file": "service.js",
+      "trigger": "@event io.cozy.files:CREATED",
+      "debounce": "3s"
+    }
+  },
   "permissions": {
     "apps": {
       "description": "Required by the nav bar to display the icons of the apps",
