@@ -103,6 +103,8 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js && yarn services && yarn langs",
+    "build:analysis": "ANALYSIS=true node scripts/build.js",
+    "start:analysis": "ANALYSIS=true node scripts/start.js",
     "test": "node scripts/test.js",
     "langs": "node scripts/translate.js",
     "services": "node scripts/buildservices.js",
