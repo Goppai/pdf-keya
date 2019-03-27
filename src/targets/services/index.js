@@ -3,7 +3,7 @@ import service from 'app/service';
 
 const client = createClient();
 
-const getOptions = argv => {
+const getOptions = (argv) => {
   try {
     return JSON.parse(argv.slice(-1)[0]);
   } catch (e) {
