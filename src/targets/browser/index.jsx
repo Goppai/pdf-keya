@@ -7,7 +7,7 @@ import { IntlProvider } from 'locales';
 import { Client, ClientProvider } from 'seal-client/client';
 
 import App from 'app/App';
-import appIcon from '../../app/icons/favicon.png';
+import appIcon from '../../app/icons/icon.svg';
 import manifest from '../../app/manifest.webapp';
 
 const renderApp = (client, appLocale, timeZone) => {
