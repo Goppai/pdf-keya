@@ -1,10 +1,9 @@
 {
-  "extends": ["airbnb", "prettier", "prettier/babel", "prettier/react"],
+  "extends": ["airbnb-typescript"],
   "parser": "babel-eslint",
-  "plugins": ["react-hooks", "prettier"],
+  "plugins": ["react-hooks"],
   "rules": {
-    "react-hooks/rules-of-hooks": "error",
-    "prettier/prettier": "error"
+    "react-hooks/rules-of-hooks": "error"
   },
   "env": {
     "browser": true,

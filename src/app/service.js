@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 const test = (client, options) => {
-  const dataAPI = `/v1/data`;
+  const dataAPI = '/v1/data';
   const docType = 'keyayun.service.test';
   const payload = [
     {
