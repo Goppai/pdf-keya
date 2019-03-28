@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { FunctionComponent, useState, useEffect } from 'react';
 
-function IFrame(props) {
-  const { children, ...rest } = props;
-
-  const [data, setData] = useState({});
+const IFrame: FunctionComponent<{
+  readonly children: React.ReactElement;
+}> = (prop) => {
+  const [data, setData] = useState<any>({});
+  const { children, ...rest } = prop;
 
   // To avoid effect get executed more than once, consider using origin in the future
   const [placeHolder] = useState(0);
 
   useEffect(() => {
-    const msgHandler = (event) => {
+    const msgHandler = (event: any) => {
       // 判断 origin 是否相符, optional
       //   const { origin } = this.props;
       //   if (origin && origin !== event.origin) {
@@ -32,10 +32,6 @@ function IFrame(props) {
   }, [placeHolder]);
 
   return <div>{React.cloneElement(children, { ...rest, ...data })}</div>;
-}
-
-IFrame.propTypes = {
-  children: PropTypes.element.isRequired,
 };
 
 // eslint-disable-next-line import/prefer-default-export

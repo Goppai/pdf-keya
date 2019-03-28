@@ -1,8 +1,8 @@
 import fetch from 'node-fetch';
 
-import Client from '../origin/packages/cozy-stack-client/src/CozyStackClient';
+import { Client } from '../client';
 
-if (global.fetch == null) {
+if (global.fetch === null) {
   global.fetch = fetch;
 }
 

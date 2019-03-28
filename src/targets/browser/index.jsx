@@ -4,7 +4,7 @@ import React from 'react';
 import { render } from 'react-dom';
 
 import { IntlProvider } from 'locales';
-import { Client, ClientProvider } from 'seal-client/client';
+import { Client, ClientContext } from 'seal-client/client';
 
 import App from 'app/App';
 import appIcon from '../../app/icons/icon.svg';
@@ -13,9 +13,9 @@ import manifest from '../../app/manifest.webapp';
 const renderApp = (client, appLocale, timeZone) => {
   render(
     <IntlProvider locale={appLocale} timeZone={timeZone}>
-      <ClientProvider client={client}>
+      <ClientContext.Provider client={client}>
         <App />
-      </ClientProvider>
+      </ClientContext.Provider>
     </IntlProvider>,
     document.querySelector('[role=application]'),
   );

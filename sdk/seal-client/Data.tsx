@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import _ from 'lodash';
-
 import {
   DocWithData,
   DocWithErrors,
@@ -9,6 +8,8 @@ import {
   Link,
   PaginationLinks,
 } from 'jsonapi-typescript';
+
+import { ClientContext, ClientDef } from './client';
 
 const dataAPI = '/v1/data';
 const refAPI = '/v1/references';
@@ -24,25 +25,19 @@ interface RevObject extends ResourceObject<string> {
   rev: string;
 }
 
-// class SealContext implements Context<{client: { stackClient: Client }}> {
-//   Provider
-// }
-
 interface CRUDProps {
-  readonly children: (
-    e: Error | null,
-    props: {
-    isLoading: boolean;
-    docs: DocRep[];
-    hasMore?: boolean;
-    },
-    funcs: {},
-  ) => JSX.ElementClass;
+  readonly children: (e: Error | null, props: {
+    isLoading: boolean,
+    docs: DocRep[],
+    hasMore?: boolean,
+  }, funcs: {}) => JSX.ElementClass;
   readonly docType: string;
-  readonly client: Client;
+  client: ClientDef;
 }
 
-interface DataProps extends CRUDProps {}
+interface DataProps extends CRUDProps {
+
+}
 
 interface ReferenceProps extends CRUDProps {
   readonly object: DocRep;
@@ -56,11 +51,7 @@ interface State {
   retry?: (() => Promise<DocRep[]>) | null;
 }
 
-interface Client {
-  fetchJSON: (method: string, path: string, payload?: object) => Promise<Document>;
-}
-
-const flattenData = (data: RevObject[] | null): DocRep[] => {
+function flattenData(data: RevObject[] | null): DocRep[] {
   if (!data) {
     return [];
   }
@@ -72,22 +63,20 @@ const flattenData = (data: RevObject[] | null): DocRep[] => {
     meta: d.meta,
     ...d.attributes,
   }));
-};
+}
 
 class CRUD<P extends CRUDProps> extends Component<P, State> {
   private loadingRef: number = 0;
 
-  docType: string = '';
-
-  client: Client; // eslint-disable-line
-
   state = {
     isLoading: false,
     docs: [],
-    error: null, // eslint-disable-line
-    next: null, // eslint-disable-line
-    retry: null, // eslint-disable-line
-  };
+    error: null, /* eslint-disable-line react/no-unused-state */
+    next: null, /* eslint-disable-line react/no-unused-state */
+    retry: null, /* eslint-disable-line react/no-unused-state */
+  }
+
+  docType: string = '';
 
   constructor(props: P) {
     super(props);
@@ -96,7 +85,7 @@ class CRUD<P extends CRUDProps> extends Component<P, State> {
       throw new Error('CRUD Component: no client in props');
     }
 
-    this.client = props.client as Client;
+    this.client = props.client;
     this.docType = props.docType;
   }
 
@@ -104,9 +93,11 @@ class CRUD<P extends CRUDProps> extends Component<P, State> {
     return this.loadingRef > 0;
   }
 
+  client: ClientDef;
+
   pushLoading() {
-    const { isLoading } = this.state;
     this.loadingRef += 1;
+    const { isLoading } = this.state;
     if (!isLoading) {
       this.setState({ isLoading: true });
     }
@@ -115,22 +106,20 @@ class CRUD<P extends CRUDProps> extends Component<P, State> {
   popLoading<K extends keyof State>(s?: Pick<State, K>) {
     this.loadingRef -= 1;
     if (this.loadingRef === 0) {
-      this.setState({ ...(s || {}), isLoading: false });
+      this.setState({ ...s || {}, isLoading: false });
     } else {
       this.setState(s || {});
     }
   }
 
-  async exec(
-    fn: (c: Client, d: string) => Promise<Document>,
-    post?: (d: RevObject[]) => void,
-  ): Promise<DocRep[]> {
+  async exec(fn: (c: ClientDef, d: string) => Promise<Document>,
+    post?: (d: RevObject[]) => void): Promise<DocRep[]> {
     const { client, docType } = this;
     try {
       this.pushLoading();
       const ret = await fn(client, docType);
-      const { data } = ret as DocWithData<RevObject[]>;
-      const { errors } = ret as DocWithErrors;
+      const { data } = (ret as DocWithData<RevObject[]>);
+      const { errors } = (ret as DocWithErrors);
 
       if (errors) {
         const reason = errors.length > 0 && errors[0].detail ? errors[0].detail : 'Unknown server error';
@@ -143,11 +132,12 @@ class CRUD<P extends CRUDProps> extends Component<P, State> {
         return flattenData(data);
       } else {
         // TODO local cache
-        const docs = _.concat(this.state.docs, flattenData(data)); // eslint-disable-line
+        const { docs } = this.state;
+        const newDocs = _.concat(docs, flattenData(data));
         const { links } = ret as DocWithData<RevObject[]>;
         const { next } = (links || {}) as PaginationLinks;
-        this.popLoading({ docs, next });
-        return docs;
+        this.popLoading({ docs: newDocs, next });
+        return newDocs;
       }
     } catch (error) {
       this.popLoading({ error });
@@ -155,6 +145,11 @@ class CRUD<P extends CRUDProps> extends Component<P, State> {
     return [];
   }
 }
+
+const createDocument = (client: ClientDef, docType: string) => (payload: object) => client.fetchJSON('POST', `${dataAPI}/${docType}/create`, { data: payload });
+const readDocument = (client: ClientDef, docType: string) => async (id: string): Promise<Document> => client.fetchJSON('GET', `${dataAPI}/${docType}/${id}`);
+const updateDocument = (client: ClientDef, docType: string) => (id: string, payload: object) => client.fetchJSON('PUT', `${dataAPI}/${docType}/${id}`, { data: payload });
+
 
 class Data extends CRUD<DataProps> {
   componentDidMount() {
@@ -168,33 +163,48 @@ class Data extends CRUD<DataProps> {
 
     const { children } = this.props;
     const { docs, isLoading, error } = this.state;
-    return children(
-      error,
-      { docs, isLoading },
-      {
-        createDoc: this.createDocument.bind(this),
-        allDocs: this.listDocuments.bind(this),
-      },
-    );
-  }
-
-  async createDocument(doc: object): Promise<RevObject[]> {
-    const { docType } = this;
-    const payload = [
-      {
-        type: docType,
-        attributes: doc,
-      },
-    ];
-    const path = `${dataAPI}/${docType}/create`;
-    return this.exec(
-      client => client.fetchJSON('POST', path, { data: payload }),
-      () => this.listDocuments(),
-    );
+    return children(error, { docs, isLoading }, {
+      createDoc: this.createDocument.bind(this),
+      readDoc: this.readDocument.bind(this),
+      updateDoc: this.updateDocument.bind(this),
+      allDocs: this.listDocuments.bind(this),
+    });
   }
 
   async listDocuments(): Promise<RevObject[]> {
     return this.exec((client, docType) => client.fetchJSON('GET', `${dataAPI}/${docType}/all`));
+  }
+
+  async createDocument(doc: object, id?: string): Promise<RevObject[]> {
+    const { client, docType } = this;
+    const payload = [{
+      id,
+      type: docType,
+      attributes: doc,
+    }];
+
+    await createDocument(client, docType)(payload);
+    return this.listDocuments();
+  }
+
+  async readDocument(id: string): Promise<RevObject[]> {
+    const { client, docType } = this;
+    const ret = await readDocument(client, docType)(id);
+    const { data } = (ret as DocWithData<RevObject[]>);
+    return flattenData(data);
+  }
+
+  async updateDocument(doc: object, id: string, rev: string): Promise<RevObject[]> {
+    const { client, docType } = this;
+    const payload = [{
+      id,
+      type: docType,
+      meta: { rev },
+      attributes: doc,
+    }];
+
+    await updateDocument(client, docType)(id, payload);
+    return this.listDocuments();
   }
 }
 
@@ -206,7 +216,7 @@ class References extends CRUD<ReferenceProps> {
       throw new Error('Data Component: no client in props');
     }
 
-    this.client = props.client as Client;
+    this.client = props.client as ClientDef;
     this.docType = props.docType;
     this.setState({
       isLoading: false,
@@ -224,15 +234,11 @@ class References extends CRUD<ReferenceProps> {
 
     const { children } = this.props;
     const { docs, isLoading, error } = this.state;
-    return children(
-      error,
-      { docs, isLoading },
-      {
-        linkDocs: this.linkDocuments.bind(this),
-        unlinkDocs: this.unlinkDocuments.bind(this),
-        getLinkedDocs: this.getLinkedDocuments.bind(this),
-      },
-    );
+    return children(error, { docs, isLoading }, {
+      linkDocs: this.linkDocuments.bind(this),
+      unlinkDocs: this.unlinkDocuments.bind(this),
+      getLinkedDocs: this.getLinkedDocuments.bind(this),
+    });
   }
 
   async linkDocuments(targets: DocRep[]): Promise<RevObject[]> {
@@ -241,17 +247,14 @@ class References extends CRUD<ReferenceProps> {
       return [];
     }
 
-    return this.exec(
-      (client, docType) => {
-        const data = targets.map(x => ({
-          id: x,
-          type: docType,
-        }));
-        const path = `${refAPI}/${type}/${id}`;
-        return client.fetchJSON('POST', path, { data });
-      },
-      () => this.getLinkedDocuments(),
-    );
+    return this.exec((client, docType) => {
+      const data = targets.map(x => ({
+        id: x,
+        type: docType,
+      }));
+      const path = `${refAPI}/${type}/${id}`;
+      return client.fetchJSON('POST', path, { data });
+    }, () => this.getLinkedDocuments());
   }
 
   async unlinkDocuments(targets: DocRep[]): Promise<RevObject[]> {
@@ -259,22 +262,14 @@ class References extends CRUD<ReferenceProps> {
       return [];
     }
 
-    return this.exec(
-      (client, docType) => {
-        const { type, id } = this.props.object;
-        const path = `${refAPI}/${type}/${id}`;
-        const all = targets.map(x => client.fetchJSON('DELETE', path, {
-          data: [
-            {
-              id: x,
-              type: docType,
-            },
-          ],
-        }));
-        return _.merge(Promise.all(all));
-      },
-      () => this.getLinkedDocuments(),
-    );
+    return this.exec((client, docType) => {
+      const { type, id } = this.props.object;
+      const path = `${refAPI}/${type}/${id}`;
+      const all = targets.map(x => client.fetchJSON('DELETE', path, {
+        data: [{ id: x, type: docType }],
+      }));
+      return _.merge(Promise.all(all));
+    }, () => this.getLinkedDocuments());
   }
 
   async getLinkedDocuments() {
@@ -287,9 +282,11 @@ class References extends CRUD<ReferenceProps> {
   }
 }
 
+
 interface ViewProps extends CRUDProps {
   readonly view: string;
-  readonly query: { [key: string]: string };
+  readonly query: {[key: string]: string};
+  readonly loadingIndicator?: React.ReactNode;
 }
 
 function encodeToQueryParam(s: any) {
@@ -299,13 +296,13 @@ function encodeToQueryParam(s: any) {
   return JSON.stringify(s);
 }
 
-class View extends CRUD<ViewProps> {
+class ViewClass extends CRUD<ViewProps> {
   componentDidMount() {
     this.load(this.props);
   }
 
   componentWillReceiveProps(nextProps: ViewProps) {
-    if (nextProps.query !== this.props.query) {
+    if (nextProps.query !== this.props.query || nextProps.view !== this.props.view) {
       this.load(nextProps);
     }
   }
@@ -317,19 +314,23 @@ class View extends CRUD<ViewProps> {
 
     const { children } = this.props;
     const {
-      docs, isLoading, error, next, retry,
-    } = this.state;
-    return children(
+      docs,
+      isLoading,
       error,
-      { docs, isLoading, hasMore: !!next },
-      {
-        retry,
-        loadMore: this.loadMore.bind(this),
-      },
-    );
+      next,
+      retry,
+    } = this.state;
+    return children(error, { docs, isLoading, hasMore: !!next }, {
+      retry,
+      loadMore: this.loadMore.bind(this),
+      createDoc: this.createDocument.bind(this),
+      readDoc: this.readDocument.bind(this),
+      updateDoc: this.updateDocument.bind(this),
+    });
   }
 
   async loadMore() {
+    const { next } = this.state;
     return this.exec(async (client) => {
       // To debug loading spinner
       //
@@ -340,8 +341,8 @@ class View extends CRUD<ViewProps> {
       // }).then(x => {
       //   console.log(x)
       // })
-      if (this.state.next) {
-        return client.fetchJSON('GET', this.state.next || '');
+      if (next) {
+        return client.fetchJSON('GET', next || '');
       }
       return { data: [] };
     });
@@ -354,12 +355,51 @@ class View extends CRUD<ViewProps> {
     return this.exec(async (client, docType) => {
       const { query, view } = props;
       const path = `${dataAPI}/${docType}/view`;
-      const param = Object.entries({ ...query, view })
-        .map(([key, val]) => `${key}=${encodeToQueryParam(val)}`)
-        .join('&');
+      const param = Object.entries({ ...query, view }).map(([key, val]) => `${key}=${encodeToQueryParam(val)}`).join('&');
       return client.fetchJSON('GET', `${path}?${param}`);
     });
   }
+
+  async createDocument(doc: object, id?: string): Promise<RevObject[]> {
+    const { client, docType } = this;
+    const payload = [{
+      id,
+      type: docType,
+      attributes: doc,
+    }];
+
+    await createDocument(client, docType)(payload);
+    return this.load(this.props);
+  }
+
+  async readDocument(id: string): Promise<RevObject[]> {
+    const { client, docType } = this;
+    const ret = await readDocument(client, docType)(id);
+    const { data } = (ret as DocWithData<RevObject[]>);
+    return flattenData(data);
+  }
+
+  async updateDocument(doc: object, id: string, rev: string): Promise<RevObject[]> {
+    const { client, docType } = this;
+    const payload = [{
+      id,
+      type: docType,
+      meta: { rev },
+      attributes: doc,
+    }];
+
+    await updateDocument(client, docType)(id, payload);
+    return this.load(this.props);
+  }
 }
 
-export { Data, View, References };
+const View = (props: ViewProps) => {
+  const client = useContext<ClientDef>(ClientContext);
+  return <ViewClass {...props} client={client} />;
+};
+
+export {
+  Data,
+  View,
+  References,
+};

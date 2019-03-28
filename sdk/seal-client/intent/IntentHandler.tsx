@@ -1,12 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, {
+  FunctionComponent,
+  useState,
+  useEffect,
+  useContext,
+} from 'react';
 
+import { ClientContext } from '../client';
 import { start } from './service';
 
-const IntentHandler = (props) => {
-  const {
-    intentId, children, client, ...rest
-  } = props;
-  const [data, setData] = useState({});
+const IntentHandler: FunctionComponent<{
+  readonly intentId: string;
+  readonly docType: string;
+  readonly children: React.ReactElement;
+}> = (props) => {
+  const client = useContext(ClientContext);
+  const { intentId, children, ...rest } = props;
+  const [data, setData] = useState<{ service?: object }>({});
 
   const loadIntent = async () => {
     if (data.service) {
@@ -14,7 +23,7 @@ const IntentHandler = (props) => {
     }
 
     try {
-      const service = await start(client.stackClient, intentId, window);
+      const service = await start(client, intentId, window);
       const { type, ...r } = service.getData();
       if (type.includes('data')) {
         setData({ service, ...r });

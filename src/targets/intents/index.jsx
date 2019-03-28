@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { IntlProvider } from 'locales';
 
-import { Client, ClientProvider } from 'seal-client/client';
+import { Client, ClientContext } from 'seal-client/client';
 import { IFrame, IntentHandler } from 'seal-client/intent';
 
 import Intent from 'app/Intent';
@@ -30,13 +30,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   render(
     <IntlProvider locale={appLocale} timeZone={timeZone}>
-      <ClientProvider client={client}>
-        <IntentHandler client={client}>
+      <ClientContext.Provider client={client}>
+        <IntentHandler>
           <IFrame>
             <Intent />
           </IFrame>
         </IntentHandler>
-      </ClientProvider>
+      </ClientContext.Provider>
     </IntlProvider>,
     document.querySelector('[role=application]'),
   );
