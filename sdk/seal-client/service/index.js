@@ -9,11 +9,10 @@ if (global.fetch == null) {
 const credentials = process.env.COZY_CREDENTIALS.trim();
 const cozyURL = process.env.COZY_URL;
 
-const createClient = () =>
-  new Client({
-    uri: cozyURL,
-    token: credentials,
-  });
+const createClient = () => new Client({
+  uri: cozyURL,
+  token: credentials,
+});
 
 // eslint-disable-next-line import/prefer-default-export
 export { createClient };

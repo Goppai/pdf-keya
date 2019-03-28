@@ -15,8 +15,17 @@
   "settings": {
     "import/resolver": {
       "node": {
-        "moduleDirectory": ["node_modules", "./", "./sdk"]
+        "moduleDirectory": ["sdk", "node_modules", ""],
+        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"]
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": "error"
+      }
+    }
+  ]
 }

@@ -1,8 +1,4 @@
+import { IFrame } from './IFrame';
+import { IntentHandler } from './IntentHandler';
 
-import { IFrame } from './IFrame'
-import { IntentHandler } from './IntentHandler'
-
-export {
-  IFrame,
-  IntentHandler,
-};
+export { IFrame, IntentHandler };

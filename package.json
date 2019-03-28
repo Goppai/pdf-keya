@@ -16,6 +16,7 @@
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/polyfill": "^7.4.0",
     "@babel/preset-env": "^7.4.1",
+    "@babel/preset-typescript": "^7.3.3",
     "@svgr/webpack": "2.4.1",
     "@types/jest": "23.3.13",
     "@types/lodash": "^4.14.120",
@@ -111,7 +112,7 @@
     "langs": "node scripts/translate.js",
     "services": "node scripts/buildservices.js",
     "services:analysis": "ANALYSIS=true node scripts/buildservices.js",
-    "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src"
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src ./sdk"
   },
   "browserslist": [
     ">0.2%",

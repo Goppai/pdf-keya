@@ -10,7 +10,7 @@ function IFrame(props) {
   const [placeHolder] = useState(0);
 
   useEffect(() => {
-    const msgHandler = event => {
+    const msgHandler = (event) => {
       // 判断 origin 是否相符, optional
       //   const { origin } = this.props;
       //   if (origin && origin !== event.origin) {

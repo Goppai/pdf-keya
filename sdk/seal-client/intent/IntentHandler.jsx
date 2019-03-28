@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 
 import { start } from './service';
 
-const IntentHandler = props => {
-  const { intentId, children, client, ...rest } = props;
+const IntentHandler = (props) => {
+  const {
+    intentId, children, client, ...rest
+  } = props;
   const [data, setData] = useState({});
 
   const loadIntent = async () => {

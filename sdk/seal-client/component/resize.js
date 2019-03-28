@@ -1,37 +1,31 @@
-import {
-  useState,
-  useCallback,
-  useLayoutEffect,
-} from 'react';
+import { useState, useCallback, useLayoutEffect } from 'react';
 
 function getSize(el) {
   if (!el) {
     return {
       width: 0,
-      height: 0
-    }
+      height: 0,
+    };
   }
 
   return {
     width: el.offsetWidth,
-    height: el.offsetHeight
-  }
+    height: el.offsetHeight,
+  };
 }
 
 function useComponentSize(ref) {
-  let [ComponentSize, setComponentSize] = useState(
-    getSize(ref ? ref.current : {})
-  );
+  const [ComponentSize, setComponentSize] = useState(getSize(ref ? ref.current : {}));
 
   const handleResize = useCallback(() => {
     if (ref.current) {
-      setComponentSize(getSize(ref.current))
+      setComponentSize(getSize(ref.current));
     }
   }, [ref]);
 
   useLayoutEffect(() => {
     if (!ref.current) {
-      return;
+      return () => {};
     }
 
     handleResize();
@@ -44,18 +38,16 @@ function useComponentSize(ref) {
         resizeObserver.disconnect(ref.current);
         resizeObserver = null;
       };
-    } else {
-      window.addEventListener('resize', handleResize);
-
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
     }
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, [ref.current]);
 
   return ComponentSize;
 }
 
-export {
-  useComponentSize,
-}
+// eslint-disable-next-line import/prefer-default-export
+export { useComponentSize };
