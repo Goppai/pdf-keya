@@ -1,11 +1,13 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { IntlProvider } from 'locales';
+import { IntlProvider, updateMessages } from 'locales';
 
 import { Client, ClientContext } from 'seal-client/client';
 import { IFrame, IntentHandler } from 'seal-client/intent';
 
-import Intent from 'app/Intent';
+import Intent from '../../src/Intent';
+
+updateMessages(require.context('../../src/locales', false, /\.json$/));
 
 // return a defaultData if the template hasn't been replaced by cozy-stack
 const getDataOrDefault = (toTest, defaultData) => {

@@ -3,12 +3,14 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import { IntlProvider } from 'locales';
+import { IntlProvider, updateMessages } from 'locales';
 import { Client, ClientContext } from 'seal-client/client';
 
-import App from 'app/App';
-import appIcon from '../../app/icons/icon.svg';
-import manifest from '../../app/manifest.webapp';
+import App from '../../src/App';
+import appIcon from '../../src/icons/icon.svg';
+import manifest from '../../src/manifest.webapp';
+
+updateMessages(require.context('../../src/locales', false, /\.json$/));
 
 const renderApp = (client, appLocale, timeZone) => {
   render(
