@@ -3,7 +3,8 @@
   "parser": "babel-eslint",
   "plugins": ["react-hooks"],
   "rules": {
-    "react-hooks/rules-of-hooks": "error"
+    "react-hooks/rules-of-hooks": "error",
+    "import/prefer-default-export": "never"
   },
   "env": {
     "browser": true,
