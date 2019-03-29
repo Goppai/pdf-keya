@@ -1,5 +1,5 @@
 import { createClient } from 'seal-client/service';
-import service from 'app/service';
+import service from '../../src/service';
 
 const client = createClient();
 

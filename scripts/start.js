@@ -5,7 +5,7 @@ process.env.NODE_ENV = 'development';
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
-process.on('unhandledRejection', err => {
+process.on('unhandledRejection', (err) => {
   throw err;
 });
 
@@ -54,7 +54,7 @@ function slugTypeToPort(slug) {
   const charDiff = (a, b) => a.charCodeAt(0) - b.charCodeAt(0);
   return ([...slug].reduce((o, c, i) => o + charDiff(c, 'a') * Math.pow(26, i), 0) % 60000) + 5000;
 }
-const manifest = JSON.parse(fs.readFileSync(require.resolve('../src/app/manifest.webapp')));
+const manifest = JSON.parse(fs.readFileSync(paths.appManifest()));
 const port = slugTypeToPort(manifest.slug) || 3000;
 
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || port;
@@ -68,7 +68,7 @@ if (process.env.HOST) {
       )}`,
     ),
   );
-  console.log(`If this was unintentional, check that you haven't mistakenly set it in your shell.`);
+  console.log("If this was unintentional, check that you haven't mistakenly set it in your shell.");
   console.log(`Learn more here: ${chalk.yellow('http://bit.ly/CRA-advanced-config')}`);
   console.log();
 }
@@ -78,12 +78,8 @@ if (process.env.HOST) {
 const { checkBrowsers } = require('react-dev-utils/browsersHelper');
 
 checkBrowsers(paths.appPath, isInteractive)
-  .then(() => {
-    // We attempt to use the default port but if it is busy, we offer the user to
-    // run on a different port. `choosePort()` Promise resolves to the next free port.
-    return choosePort(HOST, DEFAULT_PORT);
-  })
-  .then(port => {
+  .then(() => choosePort(HOST, DEFAULT_PORT))
+  .then((port) => {
     if (port == null) {
       // We have not found a port.
       return;
@@ -137,7 +133,7 @@ checkBrowsers(paths.appPath, isInteractive)
     const serverConfig = createDevServerConfig(proxyConfig, urls.lanUrlForConfig);
     const devServer = new WebpackDevServer(compiler, serverConfig);
     // Launch WebpackDevServer.
-    devServer.listen(port, HOST, err => {
+    devServer.listen(port, HOST, (err) => {
       if (err) {
         return console.log(err);
       }
@@ -148,14 +144,14 @@ checkBrowsers(paths.appPath, isInteractive)
       openBrowser(urls.localUrlForBrowser);
     });
 
-    ['SIGINT', 'SIGTERM'].forEach(function(sig) {
-      process.on(sig, function() {
+    ['SIGINT', 'SIGTERM'].forEach((sig) => {
+      process.on(sig, () => {
         devServer.close();
         process.exit();
       });
     });
   })
-  .catch(err => {
+  .catch((err) => {
     if (err && err.message) {
       console.log(err.message);
     }

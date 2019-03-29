@@ -1,21 +1,19 @@
 const fs = require('fs');
 const glob = require('glob');
 const mkdir = require('mkdirp');
+
 const globSync = glob.sync;
 const mkdirpSync = mkdir.sync;
 // import Translator from './lib/translator'
 
 const MESSAGES_PATTERN = './src/locales/output/**/*.json';
-let LANG_DIR = './src/locales/';
-if (process.argv[2] === 'example') {
-  LANG_DIR = './src/example/locales/';
-}
+const LANG_DIR = './src/locales/';
 
 // Aggregates the default messages that were extracted from the example app's
 // React components via the React Intl Babel plugin. An error will be thrown if
 // there are messages in different components that use the same `id`. The result
 // is a flat collection of `id: message` pairs for the app's default locale.
-let defaultMessages = globSync(MESSAGES_PATTERN)
+const defaultMessages = globSync(MESSAGES_PATTERN)
   .map(filename => fs.readFileSync(filename, 'utf8'))
   .map(file => JSON.parse(file))
   .reduce((collection, descriptors) => {
@@ -44,10 +42,7 @@ let defaultMessages = globSync(MESSAGES_PATTERN)
 //   }, {})
 
 mkdirpSync(LANG_DIR);
-fs.writeFileSync(
-  LANG_DIR + 'data/template.json',
-  JSON.stringify(defaultMessages, null, 2)
-);
+fs.writeFileSync(`${LANG_DIR}template.json`, JSON.stringify(defaultMessages, null, 2));
 // fs.writeFileSync(
 //   LANG_DIR + 'en-UPPER.json',
 //   JSON.stringify(uppercaseMessages, null, 2)

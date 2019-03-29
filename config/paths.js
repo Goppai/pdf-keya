@@ -13,15 +13,14 @@ function ensureSlash(inputPath, needsSlash) {
   const hasSlash = inputPath.endsWith('/');
   if (hasSlash && !needsSlash) {
     return inputPath.substr(0, inputPath.length - 1);
-  } else if (!hasSlash && needsSlash) {
-    return `${inputPath}/`;
-  } else {
-    return inputPath;
   }
+  if (!hasSlash && needsSlash) {
+    return `${inputPath}/`;
+  }
+  return inputPath;
 }
 
-const getPublicUrl = appPackageJson =>
-  envPublicUrl || require(appPackageJson).homepage;
+const getPublicUrl = appPackageJson => envPublicUrl || require(appPackageJson).homepage;
 
 // We use `PUBLIC_URL` environment variable or "homepage" field to infer
 // "public path" at which the app is served.
@@ -31,8 +30,7 @@ const getPublicUrl = appPackageJson =>
 // like /todos/42/static/js/bundle.7289d.js. We have to know the root.
 function getServedPath(appPackageJson) {
   const publicUrl = getPublicUrl(appPackageJson);
-  const servedUrl =
-    envPublicUrl || (publicUrl ? url.parse(publicUrl).pathname : '/');
+  const servedUrl = envPublicUrl || (publicUrl ? url.parse(publicUrl).pathname : '/');
   return ensureSlash(servedUrl, true);
 }
 
@@ -47,14 +45,12 @@ const moduleFileExtensions = [
   'tsx',
   'json',
   'web.jsx',
-  'jsx'
+  'jsx',
 ];
 
 // Resolve file paths in the same order as webpack
 const resolveModule = (resolveFn, filePath) => {
-  const extension = moduleFileExtensions.find(extension =>
-    fs.existsSync(resolveFn(`${filePath}.${extension}`))
-  );
+  const extension = moduleFileExtensions.find(extension => fs.existsSync(resolveFn(`${filePath}.${extension}`)));
 
   if (extension) {
     return resolveFn(`${filePath}.${extension}`);
@@ -69,10 +65,10 @@ module.exports = {
   appPath: resolveApp('.'),
   appBuild: resolveApp('build'),
   appPublic: resolveApp('public'),
-  appHtml: resolveApp('src/targets/browser/index.html'),
-  intentHtml: resolveApp('src/targets/intents/index.html'),
-  appIndexJs: resolveModule(resolveApp, 'src/targets/browser/index'),
-  intentIndexJs: resolveModule(resolveApp, 'src/targets/intents/index'),
+  appHtml: resolveApp('targets/browser/index.html'),
+  intentHtml: resolveApp('targets/intents/index.html'),
+  appIndexJs: resolveModule(resolveApp, 'targets/browser/index'),
+  intentIndexJs: resolveModule(resolveApp, 'targets/intents/index'),
   appPackageJson: resolveApp('package.json'),
   appSrc: resolveApp('src'),
   appTsConfig: resolveApp('tsconfig.json'),
@@ -82,16 +78,15 @@ module.exports = {
   appNodeModules: resolveApp('node_modules'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json')),
-  appCozyBarJs: dev =>
-    resolveApp(`node_modules/cozy-bar/dist/cozy-bar.${dev ? '' : 'min.'}js`),
-  appCozyBarCss: dev =>
-    resolveApp(`node_modules/cozy-bar/dist/cozy-bar.${dev ? '' : 'min.'}css`),
-  appCozyClientJs: () =>
-    resolveApp('node_modules/cozy-client-js/dist/cozy-client.js'),
-  appManifest: () => resolveApp('src/app/manifest.webapp'),
-  icons: resolveApp('src/app/icons'),
+  appCozyBarJs: dev => resolveApp(`node_modules/cozy-bar/dist/cozy-bar.${dev ? '' : 'min.'}js`),
+  appCozyBarCss: dev => resolveApp(`node_modules/cozy-bar/dist/cozy-bar.${dev ? '' : 'min.'}css`),
+  appCozyClientJs: () => resolveApp('node_modules/cozy-client-js/dist/cozy-client.js'),
+  appManifest: () => resolveApp('src/manifest.webapp'),
+  icons: resolveApp('src/icons'),
   sdk: resolveApp('sdk'),
-  serviceJs: resolveModule(resolveApp, 'src/targets/services/index')
+  serviceJs: resolveModule(resolveApp, 'src/targets/services/index'),
+  srcList: ['src', 'sdk', 'locales', 'targets'].map(resolveApp),
+  resolvePath: ['sdk', 'node_modules'],
 };
 
 module.exports.moduleFileExtensions = moduleFileExtensions;

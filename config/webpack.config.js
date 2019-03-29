@@ -253,7 +253,7 @@ module.exports = function (webpackEnv) {
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
-      modules: [paths.appSrc, paths.sdk, 'node_modules'].concat(
+      modules: paths.resolvePath.concat(
         // It is guaranteed to exist because we tweak it in `env.js`
         process.env.NODE_PATH.split(path.delimiter).filter(Boolean),
       ),
@@ -310,7 +310,7 @@ module.exports = function (webpackEnv) {
               loader: require.resolve('eslint-loader'),
             },
           ],
-          include: [paths.appSrc, paths.sdk],
+          include: paths.srcList,
         },
         {
           // "oneOf" will traverse all following loaders until one will
@@ -332,7 +332,7 @@ module.exports = function (webpackEnv) {
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
-              include: [paths.appSrc, paths.sdk],
+              include: paths.srcList,
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve('babel-preset-react-app/webpack-overrides'),
@@ -652,7 +652,7 @@ module.exports = function (webpackEnv) {
             '!**/src/setupProxy.*',
             '!**/src/setupTests.*',
           ],
-          watch: paths.appSrc,
+          watch: paths.srcList,
           silent: true,
           formatter: typescriptFormatter,
         }),
