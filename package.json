@@ -25,6 +25,8 @@
     "@types/node-fetch": "^2.1.7",
     "@types/react": "^16.8.0",
     "@types/react-dom": "^16.8.0",
+    "@types/react-intl": "^2.3.17",
+    "@types/react-router-dom": "^4.3.1",
     "@types/webpack-env": "^1.13.9",
     "@typescript-eslint/eslint-plugin": "^1.5.0",
     "antd": "^3.11.6",
@@ -111,7 +113,8 @@
     "build:analysis": "ANALYSIS=true node scripts/build.js",
     "start:analysis": "ANALYSIS=true node scripts/start.js",
     "test": "node scripts/test.js",
-    "langs": "rm -rf src/locales/output && NODE_ENV=production babel ./src > /dev/null && node scripts/translate.js",
+    "extract": "rm -rf trans-tmp && tsc -p . --target ES6 --module es6 --jsx preserve --noEmit false --outDir trans-tmp && NODE_ENV=production babel ./trans-tmp > /dev/null",
+    "langs": "rm -rf src/locales/output && yarn extract && node scripts/translate.js",
     "services": "node scripts/buildservices.js",
     "services:analysis": "ANALYSIS=true node scripts/buildservices.js",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src ./sdk"

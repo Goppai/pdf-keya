@@ -1,10 +1,9 @@
 /* global navbar */
-
 import React from 'react';
 import { render } from 'react-dom';
 
 import { IntlProvider, updateMessages } from 'locales';
-import { Client, ClientContext } from 'seal-client/client';
+import { Client, ClientContext, ClientDef } from 'seal-client/client';
 
 import App from '../../src/App';
 import appIcon from '../../src/icons/icon.svg';
@@ -12,10 +11,10 @@ import manifest from '../../src/manifest.webapp';
 
 updateMessages(require.context('../../src/locales', false, /\.json$/));
 
-const renderApp = (client, appLocale, timeZone) => {
+const renderApp = (client: ClientDef, appLocale: string, timeZone: string) => {
   render(
     <IntlProvider locale={appLocale} timeZone={timeZone}>
-      <ClientContext.Provider client={client}>
+      <ClientContext.Provider value={client}>
         <App />
       </ClientContext.Provider>
     </IntlProvider>,
@@ -24,28 +23,28 @@ const renderApp = (client, appLocale, timeZone) => {
 };
 
 // return a defaultData if the template hasn't been replaced by service
-const getDataOrDefault = (toTest, defaultData) => {
+const getDataOrDefault = (toTest: string, defaultData: string) => {
   const templateRegex = /^\{\{\.[a-zA-Z]*\}\}$/; // {{.Example}}
   return templateRegex.test(toTest) ? defaultData : toTest;
 };
 
 // initial rendering of the application
 document.addEventListener('DOMContentLoaded', () => {
-  const root = document.querySelector('[role=application]');
-  const data = root.dataset;
+  const root: HTMLDivElement = document.querySelector('[role=application]') as HTMLDivElement;
+  const data: SealDataSet = (root.dataset as unknown) as SealDataSet;
 
   // initialize the client to interact with server
-  const protocol = window.location ? window.location.protocol : 'https:';
-  const cozyURL = `${protocol}//${data.domain}`;
-  const client = new Client({
+  const protocol: string = window.location ? window.location.protocol : 'https:';
+  const cozyURL: string = `${protocol}//${data.domain}`;
+  const client: ClientDef = new Client({
     uri: cozyURL,
     token: data.token,
   });
 
-  const iconPath = getDataOrDefault(data.iconPath, appIcon);
-  const appName = getDataOrDefault(data.appName, manifest.name);
-  const appLocale = getDataOrDefault(data.locale, 'zh');
-  const timeZone = getDataOrDefault(data.timeZone, '');
+  const iconPath: string = getDataOrDefault(data.iconPath, appIcon);
+  const appName: string = getDataOrDefault(data.appName, manifest.name);
+  const appLocale: string = getDataOrDefault(data.locale, 'zh');
+  const timeZone: string = getDataOrDefault(data.timeZone, '');
   navbar.init({
     appSlug: data.appSlug,
     cozyURL,

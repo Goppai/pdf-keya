@@ -1,3 +1,5 @@
 {
-  "example.hello": "欢迎"
+  "example.hello": "欢迎",
+  "example.toenglish": "切换到英文",
+  "example.tochinese": "切换到中文"
 }

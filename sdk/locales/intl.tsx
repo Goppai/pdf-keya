@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactChild, Component } from 'react';
 import PropTypes from 'prop-types';
 import { addLocaleData, IntlProvider } from 'react-intl';
 
@@ -9,17 +9,27 @@ import messages from './messages';
 
 addLocaleData([...zh, ...en]);
 
-const { Provider, Consumer } = React.createContext();
+interface PropTypes {
+  readonly children: ReactChild;
+  locale: string;
+  timeZone: string;
+}
 
-class IntlProviderWrapper extends React.Component {
-  static propTypes = {
-    locale: PropTypes.string.isRequired,
-    timeZone: PropTypes.string.isRequired,
-    children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
-  };
+interface State {
+  locale: string;
+  timeZone: string;
+}
 
-  constructor(...args) {
-    super(...args);
+export interface ContextDef {
+  switchLanguage: (locale: string) => void;
+  switchTimeZone: (timeZone: string) => void;
+}
+
+const { Provider, Consumer } = React.createContext<ContextDef>({} as ContextDef);
+
+class IntlProviderWrapper extends Component<PropTypes, State> {
+  constructor(props: PropTypes, context: any) {
+    super(props, context);
 
     const { locale, timeZone } = this.props;
 
@@ -28,21 +38,24 @@ class IntlProviderWrapper extends React.Component {
     this.state = {
       locale,
       timeZone: timeZone || '',
-      // switchLanguage: this.switchLanguage,
-      // switchTimeZone: this.switchTimeZone,
     };
   }
 
-  switchLanguage = locale => this.setState({ locale });
+  switchLanguage = (locale: string) => this.setState({ locale });
 
-  switchTimeZone = timeZone => this.setState({ timeZone });
+  switchTimeZone = (timeZone: string) => this.setState({ timeZone });
 
   render() {
     const { children } = this.props;
     const { locale, timeZone } = this.state;
-    const validLocale = messages[locale] ? locale : 'zh';
+    const validLocale: string = messages[locale] ? locale : 'zh';
     return (
-      <Provider value={this.state}>
+      <Provider
+        value={{
+          switchLanguage: this.switchLanguage,
+          switchTimeZone: this.switchTimeZone,
+        }}
+      >
         <IntlProvider
           key={locale}
           locale={validLocale}

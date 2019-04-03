@@ -10,15 +10,15 @@ import Intent from '../../src/Intent';
 updateMessages(require.context('../../src/locales', false, /\.json$/));
 
 // return a defaultData if the template hasn't been replaced by cozy-stack
-const getDataOrDefault = (toTest, defaultData) => {
+const getDataOrDefault = (toTest: string, defaultData: string) => {
   const templateRegex = /^\{\{\.[a-zA-Z]*\}\}$/; // {{.Example}}
   return templateRegex.test(toTest) ? defaultData : toTest;
 };
 
 // initial rendering of the application
 document.addEventListener('DOMContentLoaded', () => {
-  const root = document.querySelector('[role=application]');
-  const data = root.dataset;
+  const root: HTMLDivElement = document.querySelector('[role=application]') as HTMLDivElement;
+  const data: SealDataSet = (root.dataset as unknown) as SealDataSet;
 
   const appLocale = getDataOrDefault(data.locale, 'zh');
   const timeZone = getDataOrDefault(data.timeZone, '');
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   render(
     <IntlProvider locale={appLocale} timeZone={timeZone}>
-      <ClientContext.Provider client={client}>
+      <ClientContext.Provider value={client}>
         <IntentHandler>
           <IFrame>
             <Intent />
