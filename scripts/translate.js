@@ -1,6 +1,7 @@
 const fs = require('fs');
 const glob = require('glob');
 const mkdir = require('mkdirp');
+const rimraf = require('rimraf');
 
 const globSync = glob.sync;
 const mkdirpSync = mkdir.sync;

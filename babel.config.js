@@ -21,6 +21,12 @@ module.exports = {
         loose: true,
       },
     ],
+    [
+      'babel-plugin-react-intl',
+      {
+        messagesDir: './src/locales/output',
+      },
+    ],
     '@babel/plugin-syntax-dynamic-import',
     [
       'import',
