@@ -91,6 +91,7 @@
     "react-dev-utils": "^7.0.0",
     "react-dom": "^16.8.0",
     "react-intl": "^2.8.0",
+    "react-intl-translations-manager": "^5.0.3",
     "react-router-dom": "^4.3.1",
     "resize-observer-polyfill": "^1.5.1",
     "resolve": "1.8.1",
@@ -108,13 +109,14 @@
     "write-file-webpack-plugin": "^4.5.0"
   },
   "scripts": {
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js && yarn services && yarn langs",
+    "start": "yarn langs && node scripts/start.js",
+    "build": "yarn langs && node scripts/build.js && yarn services",
     "build:analysis": "ANALYSIS=true node scripts/build.js",
     "start:analysis": "ANALYSIS=true node scripts/start.js",
     "test": "node scripts/test.js",
     "extract": "rm -rf trans-tmp && tsc -p . --target ES6 --module es6 --jsx preserve --noEmit false --outDir trans-tmp && NODE_ENV=production babel ./trans-tmp > /dev/null",
-    "langs": "rm -rf src/locales/output && yarn extract && node scripts/translate.js",
+    "manage:translations": "node scripts/translationRunner.js",
+    "langs": "rm -rf src/locales/output && yarn extract && yarn manage:translations",
     "services": "node scripts/buildservices.js",
     "services:analysis": "ANALYSIS=true node scripts/buildservices.js",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src ./sdk"
