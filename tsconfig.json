@@ -13,8 +13,14 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "strictNullChecks": true,
+    "baseUrl": "",
+    "paths": {
+      "locales": ["sdk/locales"],
+      "seal-client/*": ["sdk/seal-client/*"]
+    }
   },
-  "include": ["src", "sdk", "env.d.ts"],
+  "include": ["src", "sdk", "targets", "env.d.ts"],
   "exclude": ["sdk/seal-client/origin"]
 }

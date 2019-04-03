@@ -11,7 +11,4 @@ const ClientContext = React.createContext<ClientDef>({
   fetchJSON: () => Promise.resolve({ errors: [] }),
 });
 
-export {
-  Client,
-  ClientContext,
-};
+export { Client, ClientContext };

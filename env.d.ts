@@ -9,6 +9,12 @@ declare namespace NodeJS {
   }
 }
 
+declare namespace NodeJS {
+  interface Global {
+    fetch: any;
+  }
+}
+
 declare module '*.bmp' {
   const src: string;
   export default src;
@@ -36,6 +42,11 @@ declare module '*.png' {
 
 declare module '*.webp' {
   const src: string;
+  export default src;
+}
+
+declare module '*.webapp' {
+  const src: any;
   export default src;
 }
 

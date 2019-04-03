@@ -1,4 +1,4 @@
 scripts/**
 config/**
 sdk/seal-client/origin/**
-src/react-app-env.d.ts
+env.d.ts

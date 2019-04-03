@@ -1,17 +1,13 @@
 import React, {
-  FunctionComponent,
-  useState,
-  useEffect,
-  useContext,
+  FunctionComponent, useState, useEffect, useContext,
 } from 'react';
 
 import { ClientContext } from '../client';
 import { start } from './service';
 
 const IntentHandler: FunctionComponent<{
-  readonly intentId: string;
-  readonly docType: string;
-  readonly children: React.ReactElement;
+readonly intentId?: string;
+readonly children: React.ReactElement;
 }> = (props) => {
   const client = useContext(ClientContext);
   const { intentId, children, ...rest } = props;

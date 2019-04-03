@@ -84,7 +84,7 @@ module.exports = {
   appManifest: () => resolveApp('src/manifest.webapp'),
   icons: resolveApp('src/icons'),
   sdk: resolveApp('sdk'),
-  serviceJs: resolveModule(resolveApp, 'src/targets/services/index'),
+  serviceJs: resolveModule(resolveApp, 'targets/services/index'),
   srcList: ['src', 'sdk', 'locales', 'targets'].map(resolveApp),
   resolvePath: ['sdk', 'node_modules'],
 };
