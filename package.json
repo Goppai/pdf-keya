@@ -121,6 +121,9 @@
     "services:analysis": "ANALYSIS=true node scripts/buildservices.js",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src ./sdk"
   },
+  "sideEffects": [
+    "*.css"
+  ],
   "browserslist": [
     ">0.2%",
     "not dead",
