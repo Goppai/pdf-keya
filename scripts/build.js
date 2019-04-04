@@ -5,7 +5,7 @@ process.env.NODE_ENV = 'production';
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
 // terminate the Node.js process with a non-zero exit code.
-process.on('unhandledRejection', err => {
+process.on('unhandledRejection', (err) => {
   throw err;
 });
 
@@ -23,6 +23,7 @@ const printHostingInstructions = require('react-dev-utils/printHostingInstructio
 const FileSizeReporter = require('react-dev-utils/FileSizeReporter');
 const printBuildError = require('react-dev-utils/printBuildError');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 const paths = require('../config/paths');
 const configFactory = require('../config/webpack.config');
 
@@ -61,12 +62,8 @@ if (process.env.ANALYSIS === 'true') {
 const { checkBrowsers } = require('react-dev-utils/browsersHelper');
 
 checkBrowsers(paths.appPath, isInteractive)
-  .then(() => {
-    // First, read the current file sizes in build directory.
-    // This lets us display how much they changed later.
-    return measureFileSizesBeforeBuild(paths.appBuild);
-  })
-  .then(previousFileSizes => {
+  .then(() => measureFileSizesBeforeBuild(paths.appBuild))
+  .then((previousFileSizes) => {
     // Remove all content but keep the directory so that
     // if you're in it, you don't end up in Trash
     fs.emptyDirSync(paths.appBuild);
@@ -108,13 +105,13 @@ checkBrowsers(paths.appPath, isInteractive)
       const buildFolder = path.relative(process.cwd(), paths.appBuild);
       printHostingInstructions(appPackage, publicUrl, publicPath, buildFolder, useYarn);
     },
-    err => {
+    (err) => {
       console.log(chalk.red('Failed to compile.\n'));
       printBuildError(err);
       process.exit(1);
     },
   )
-  .catch(err => {
+  .catch((err) => {
     if (err && err.message) {
       console.log(err.message);
     }
@@ -125,7 +122,8 @@ checkBrowsers(paths.appPath, isInteractive)
 function build(previousFileSizes) {
   console.log('Creating an optimized production build...');
 
-  const compiler = webpack(config);
+  const smp = new SpeedMeasurePlugin();
+  const compiler = webpack(process.env.ASPEED ? smp.wrap(config) : config);
   return new Promise((resolve, reject) => {
     compiler.run((err, stats) => {
       let messages;
@@ -151,14 +149,14 @@ function build(previousFileSizes) {
         return reject(new Error(messages.errors.join('\n\n')));
       }
       if (
-        process.env.CI &&
-        (typeof process.env.CI !== 'string' || process.env.CI.toLowerCase() !== 'false') &&
-        messages.warnings.length
+        process.env.CI
+        && (typeof process.env.CI !== 'string' || process.env.CI.toLowerCase() !== 'false')
+        && messages.warnings.length
       ) {
         console.log(
           chalk.yellow(
-            '\nTreating warnings as errors because process.env.CI = true.\n' +
-              'Most CI servers set it automatically.\n',
+            '\nTreating warnings as errors because process.env.CI = true.\n'
+              + 'Most CI servers set it automatically.\n',
           ),
         );
         return reject(new Error(messages.warnings.join('\n\n')));

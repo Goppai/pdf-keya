@@ -97,6 +97,7 @@
     "resolve": "1.8.1",
     "sass-loader": "7.1.0",
     "sift": "^7.0.1",
+    "speed-measure-webpack-plugin": "^1.3.1",
     "style-loader": "0.23.0",
     "terser-webpack-plugin": "1.1.0",
     "typescript": "3.3.1",
@@ -119,6 +120,7 @@
     "langs": "rm -rf src/locales/output && yarn extract && yarn manage:translations",
     "services": "node scripts/buildservices.js",
     "services:analysis": "ANALYSIS=true node scripts/buildservices.js",
+    "services:speed_analysis": "ASPEED=true node scripts/buildservices.js",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src ./sdk"
   },
   "sideEffects": [
