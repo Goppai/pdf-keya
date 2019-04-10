@@ -2,7 +2,7 @@ const node_env = process.env.DEVELOPMENT === 'true' ? 'development' : 'productio
 process.env.BABEL_ENV = node_env;
 process.env.NODE_ENV = node_env;
 
-process.on('unhandledRejection', err => {
+process.on('unhandledRejection', (err) => {
   throw err;
 });
 
@@ -11,49 +11,55 @@ require('../config/env');
 const fs = require('fs-extra');
 const chalk = require('chalk');
 const webpack = require('webpack');
+const path = require('path');
 const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
 const printBuildError = require('react-dev-utils/printBuildError');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const paths = require('../config/paths');
 const configFactory = require('../config/webpack.config.services');
 
-const hasService = fs.existsSync(paths.serviceJs);
+function requireFileAsString(filename) {
+  return fs.readFileSync(filename, 'utf8');
+}
+
+const templateManifest = requireFileAsString(path.join(__dirname, '../src/manifest.webapp'));
+const manifest = JSON.parse(templateManifest);
+
+const hasService = fs.existsSync(paths.serviceJs) && manifest.services != null;
 
 console.log(paths.serviceJs);
 
-const build = config => {
-  return new Promise((resolve, reject) => {
-    const compiler = webpack(config);
-    compiler.run((err, stats) => {
-      let messages;
-      if (err) {
-        if (!err.message) {
-          return reject(err);
-        }
-        messages = formatWebpackMessages({
-          errors: [err.message],
-          warnings: [],
-        });
-      } else {
-        messages = formatWebpackMessages(
-          stats.toJson({ all: false, warnings: true, errors: true }),
-        );
+const build = config => new Promise((resolve, reject) => {
+  const compiler = webpack(config);
+  compiler.run((err, stats) => {
+    let messages;
+    if (err) {
+      if (!err.message) {
+        return reject(err);
       }
-      if (messages.errors.length) {
-        // Only keep the first error. Others are often indicative
-        // of the same problem, but confuse the reader with noise.
-        if (messages.errors.length > 1) {
-          messages.errors.length = 1;
-        }
-        return reject(new Error(messages.errors.join('\n\n')));
-      }
-      return resolve({
-        stats,
-        warnings: messages.warnings,
+      messages = formatWebpackMessages({
+        errors: [err.message],
+        warnings: [],
       });
+    } else {
+      messages = formatWebpackMessages(
+        stats.toJson({ all: false, warnings: true, errors: true }),
+      );
+    }
+    if (messages.errors.length) {
+      // Only keep the first error. Others are often indicative
+      // of the same problem, but confuse the reader with noise.
+      if (messages.errors.length > 1) {
+        messages.errors.length = 1;
+      }
+      return reject(new Error(messages.errors.join('\n\n')));
+    }
+    return resolve({
+      stats,
+      warnings: messages.warnings,
     });
   });
-};
+});
 
 if (hasService) {
   const config = configFactory(node_env, [paths.serviceJs]);
@@ -83,13 +89,13 @@ if (hasService) {
           console.log(chalk.green('Compiled successfully.\n'));
         }
       },
-      err => {
+      (err) => {
         console.log(chalk.red('Failed to compile.\n'));
         printBuildError(err);
         process.exit(1);
       },
     )
-    .catch(err => {
+    .catch((err) => {
       if (err && err.message) {
         console.log(err.message);
       }
