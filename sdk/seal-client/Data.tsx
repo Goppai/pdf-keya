@@ -80,6 +80,8 @@ class CRUD<P extends CRUDProps> extends Component<P, State> {
 
   docType: string = '';
 
+  client: ClientDef;
+
   constructor(props: P) {
     super(props);
 
@@ -94,8 +96,6 @@ class CRUD<P extends CRUDProps> extends Component<P, State> {
   get isLoading() {
     return this.loadingRef > 0;
   }
-
-  client: ClientDef;
 
   pushLoading() {
     this.loadingRef += 1;
