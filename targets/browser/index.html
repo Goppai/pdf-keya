@@ -4,9 +4,9 @@
     <meta charset="utf-8" />
     <title>{{.AppName}}</title>
     <!-- https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content={{.AppName}}>
-    <meta name="application-name" content={{.AppName}}>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="{{.AppName}}" />
+    <meta name="application-name" content="{{.AppName}}" />
     <link rel="apple-touch-icon-precomposed" sizes="180x180" href="/apple-icon.png" />
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/apple-icon-57x57.png" />
     <link rel="apple-touch-icon-precomposed" sizes="60x60" href="/apple-icon-60x60.png" />
@@ -31,7 +31,9 @@
       content="width=device-width, height=device-height, initial-scale=1, viewport-fit=cover"
     />
   </head>
-  <body style="min-height: 650px; min-width: 1200px; overflow: auto;">
+  <body
+    style="min-height: 650px; min-width: 1200px; overflow: auto;display: flex;flex-direction: column; align-items:stretch"
+  >
     <div
       role="application"
       data-token="{{.Token}}"
@@ -43,7 +45,6 @@
       data-app-editor="{{.AppEditor}}"
       data-icon-path="{{.IconPath}}"
       data-time-zone="{{.TimeZone}}"
-    >
-    </div>
+    ></div>
   </body>
 </html>
