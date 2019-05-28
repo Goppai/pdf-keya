@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
 
 const IFrame: FunctionComponent<{
-  readonly children: React.ReactElement;
+readonly children: React.ReactElement;
 }> = (prop) => {
   const [data, setData] = useState<any>({});
   const { children, ...rest } = prop;
@@ -31,7 +31,7 @@ const IFrame: FunctionComponent<{
     };
   }, [placeHolder]);
 
-  return <div>{React.cloneElement(children, { ...rest, ...data })}</div>;
+  return React.cloneElement(children, { ...rest, ...data });
 };
 
 // eslint-disable-next-line import/prefer-default-export
