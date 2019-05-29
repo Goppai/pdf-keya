@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html lang="{{.Locale}}">
-  <meta charset="utf-8" />
-  <title>{{.AppName}}</title>
-  <link rel="apple-touch-icon-precomposed" href="/apple-icon.png" />
-  <link rel="icon" type="image/png" href="/favicon.png" />
-  <meta name="msapplication-TileColor" content="#2b5797" />
-  <meta name="theme-color" content="#ffffff" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <div
-    style="height: 100%;"
-    role="application"
-    data-token="{{.Token}}"
-    data-domain="{{.Domain}}"
-    data-locale="{{.Locale}}"
-    data-app-editor="{{.AppEditor}}"
-    data-app-name="{{.AppName}}"
-    data-app-name-prefix="{{.AppNamePrefix}}"
-    data-app-slug="{{.AppSlug}}"
-    data-icon-path="{{.IconPath}}"
-    data-time-zone="{{.TimeZone}}"
-  ></div>
+  <head>
+    <meta charset="utf-8" />
+    <title>{{.AppName}}</title>
+    <link rel="apple-touch-icon-precomposed" href="/apple-icon.png" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="msapplication-TileColor" content="#2b5797" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <div
+      style="height: 100%;"
+      role="application"
+      data-token="{{.Token}}"
+      data-domain="{{.Domain}}"
+      data-locale="{{.Locale}}"
+      data-app-editor="{{.AppEditor}}"
+      data-app-name="{{.AppName}}"
+      data-app-name-prefix="{{.AppNamePrefix}}"
+      data-app-slug="{{.AppSlug}}"
+      data-icon-path="{{.IconPath}}"
+      data-time-zone="{{.TimeZone}}"
+    ></div>
+  </body>
 </html>
