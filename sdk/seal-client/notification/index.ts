@@ -19,7 +19,7 @@ interface NotifData {
   type?: NotifType;
   message?: string;
   link?: string;
-  listeners: string[];
+  listeners?: string[];
 }
 
 interface ScheduleNotifData extends NotifData {
