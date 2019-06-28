@@ -32,14 +32,14 @@ module.exports = {
       'import',
       {
         libraryName: 'antd',
-        libraryDirectory: 'es',
+        libraryDirectory: 'lib',
         style: 'css',
       },
     ],
     [
       'module-resolver',
       {
-        root: ['./src'],
+        root: ['./sdk', './src'],
       },
     ],
   ],
