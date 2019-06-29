@@ -1,9 +1,10 @@
 {
-  "extends": ["airbnb-typescript"],
+  "extends": ["airbnb-typescript", "prettier/react"],
   "parser": "babel-eslint",
   "plugins": ["react-hooks"],
   "rules": {
     "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
     "import/prefer-default-export": "never"
   },
   "env": {
