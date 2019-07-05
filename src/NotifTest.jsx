@@ -14,10 +14,11 @@ class NotifTest extends React.Component {
       appSlug: 'drive',
       link: '',
       titleWithLocales: {
-        zh: ['通知测试'],
-        'zh-Hant-HK': [],
-        en: [],
+        zh: ['通知测试', '普通'],
+        'zh-Hant-HK': ['通知測試', '普通'],
+        en: ['Notification Test', 'common'],
       },
+      message: 'sendNotification',
     });
     console.log('sendNotification', res);
   };
@@ -26,11 +27,12 @@ class NotifTest extends React.Component {
     const res = await sendScheduleNotification(client, {
       appSlug: 'drive',
       titleWithLocales: {
-        zh: ['定时通知'],
-        'zh-Hant-HK': [],
-        en: [],
+        zh: ['通知测试', '定时'],
+        'zh-Hant-HK': ['通知測試', '定時'],
+        en: ['Notification Test', 'schedule'],
       },
-      listeners: ['api.ip-10-3-7-178.bj.keyayun.com:8080'],
+      message: 'sendScheduleNotification',
+      listeners: ['api.ip-10-3-4-91.bj.keyayun.com:8080'], // default: my instance domain
       time: new Date(Date.now() + 10000), // 10s
     });
     this.cancelId = res.id;
