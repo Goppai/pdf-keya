@@ -5,6 +5,7 @@ import { injectIntl, defineMessages, InjectedIntlProps } from 'react-intl';
 import { IntlConsumer, ContextDef } from 'locales';
 import { Button } from 'antd';
 import NotifTest from './NotifTest';
+import UI from './dataapi/ui';
 
 const messages = defineMessages({
   hello: {
@@ -33,6 +34,7 @@ const App = ({ intl }: InjectedIntlProps) => (
             {intl.formatMessage(messages.tochinese)}
           </Button>
           <div>{intl.formatMessage(messages.hello)}</div>
+          <UI />
           <NotifTest />
         </React.Fragment>
       )}
