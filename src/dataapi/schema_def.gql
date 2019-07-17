@@ -1,10 +1,14 @@
-type Data {
+input IData {
+  json: String!
+}
+
+type OData {
   json: String!
 }
 
 type Doc {
-  id: Id!
-  attributes: Data!
+  id: ID!
+  attributes: OData!
   rev: String!
 }
 
@@ -14,8 +18,8 @@ type Docs {
 }
 
 type Link {
-  id1: ID!,
-  id2: ID!,
+  id1: ID!
+  id2: ID!
 }
 
 type Links {
@@ -25,32 +29,25 @@ type Links {
 
 type Mgr {
   type: String
-  create(data: Data!): Doc
+  create(data: IData!): Doc
   get(id: ID!): Doc
-  put(id: ID!, rev: String, data: Data!): Doc
+  put(id: ID!, rev: String, data: IData!): Doc
   delete(id: ID!, rev: String): Boolean
-  all(limit: Int = 10, sortby: String, descending: Boolean = true): Docs
-  nextPages(pagesUrl: String): Docs
-  find(index: String!, selector: String!, sort: String, fields: string, limit: Int = 10: Docs
-  view(view: String, key: String, keys: String, start_key: String, end_key: String, descending: Boolean, group: Boolean = false, group_level: Int, include_docs: Boolean = true, limit: Int = 10): Docs
-  serach(keywords: [String]!, selector: String, sort: String, include_docs: Boolean, limit: Int = 10): Docs
-  link(type: String!, id: ID!, refID: ID!): Boolean
-  unlink(type: String!, id: ID!, refID: ID!): Boolean
-  allLinks(type: String!, id: ID!, limit: Int = 10, descending: Boolean = true): Links
-  nextLinks(linksUrl: String): Links
+  # all(limit: Int = 10, sortby: String, descending: Boolean = true): Docs
+  # nextPages(pagesUrl: String): Docs
+  # find(index: String!, selector: String!, sort: String, fields: string, limit: Int = 10: Docs
+  # view(view: String, key: String, keys: String, start_key: String, end_key: String, descending: Boolean, group: Boolean = false, group_level: Int, include_docs: Boolean = true, limit: Int = 10): Docs
+  # serach(keywords: [String]!, selector: String, sort: String, include_docs: Boolean, limit: Int = 10): Docs
+  # link(type: String!, id: ID!, refID: ID!): Boolean
+  # unlink(type: String!, id: ID!, refID: ID!): Boolean
+  # allLinks(type: String!, id: ID!, limit: Int = 10, descending: Boolean = true): Links
+  # nextLinks(linksUrl: String): Links
 }
 
 type Query {
-  hello: String
-  quoteOfTheDay: String
-  random: Float!
-  rollThreeDice: [Int]
-  rollDice(numDice: Int!, numSides: Int): [Int]
-  getDie(numSides: Int): RandomDie
-  getMessage(id: ID!): Message
-  mgr(type: String): Mgr
+  getMgr(type: String): Mgr
 }
 
 type Mutation {
-  mgr(type: String): Mgr
+  getMgr(type: String): Mgr
 }
