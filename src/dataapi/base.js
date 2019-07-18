@@ -64,36 +64,3 @@ const Mgr = new graphql.GraphQLObjectType({
     },
   },
 });
-
-// Define the Query type
-const query = new graphql.GraphQLObjectType({
-  name: 'Query',
-  fields: {
-    getMgr: {
-      type: Mgr,
-      // `args` describes the arguments that the `user` query accepts
-      args: {
-        type: { type: graphql.GraphQLString },
-      },
-    },
-  },
-});
-
-const mutation = new graphql.GraphQLObjectType({
-  name: 'Mutation',
-  fields: {
-    getMgr: {
-      type: Mgr,
-      // `args` describes the arguments that the `user` query accepts
-      args: {
-        type: { type: graphql.GraphQLString },
-      },
-    },
-  },
-});
-
-const schema = new graphql.GraphQLSchema({ query, mutation });
-
-console.log(graphql.printSchema(schema));
-
-export default schema;

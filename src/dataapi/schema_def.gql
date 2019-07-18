@@ -6,10 +6,15 @@ type OData {
   json: String!
 }
 
-type Doc {
+interface BasicDoc {
   id: ID!
-  attributes: OData!
   rev: String!
+}
+
+type Doc implements BasicDoc {
+  id: ID!
+  rev: String!
+  attributes: OData!
 }
 
 type Docs {

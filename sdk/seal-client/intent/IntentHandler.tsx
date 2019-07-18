@@ -13,28 +13,27 @@ readonly children: React.ReactElement;
   const { intentId, children, ...rest } = props;
   const [data, setData] = useState<{ service?: object }>({});
 
-  const loadIntent = async () => {
-    if (data.service) {
-      return;
-    }
-
-    try {
-      const service = await start(client, intentId, window);
-      const { type, ...r } = service.getData();
-      if (type.includes('data')) {
-        setData({ service, ...r });
-      } else {
-        setData({ service });
-      }
-    } catch (error) {
-      throw error;
-    }
-  };
-
   useEffect(() => {
+    const loadIntent = async () => {
+      if (data.service) {
+        return;
+      }
+
+      try {
+        const service = await start(client, intentId, window);
+        const { type, ...r } = service.getData();
+        if (type.includes('data')) {
+          setData({ service, ...r });
+        } else {
+          setData({ service });
+        }
+      } catch (error) {
+        throw error;
+      }
+    };
     loadIntent();
     return () => {};
-  }, [data]);
+  }, [client, data, intentId]);
 
   if (!data.service) {
     return <div id="intent_placeholder" />;
