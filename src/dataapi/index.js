@@ -6,7 +6,7 @@ import { graphql } from 'graphql';
 // import schema from './schema_fromjs';
 // import resolvers from './resolvers';
 
-import createSchema from './schema2';
+import createSchema from './schema3';
 
 const { schema, resolvers } = createSchema('keyayun.service.test', null, 'TEST');
 
