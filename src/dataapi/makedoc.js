@@ -1,6 +1,7 @@
 import { GraphQLObjectType, GraphQLString, GraphQLBoolean } from 'graphql';
 import _ from 'lodash';
-import DocManager from './_mgr';
+import MockManager from './mockmgr';
+import DocManager from './docmgr';
 
 const prefixName = (name, prefix) => `${prefix}_${name}`;
 
@@ -66,7 +67,8 @@ const make = (customTypes, prefix) => {
 };
 
 const makeDoc = (type, customTypes, client, prefix) => {
-  const mgr = DocManager(type, client);
+  // eslint-disable-next-line no-constant-condition
+  const mgr = true ? MockManager(type, client) : DocManager(type, client);
   const { mutation, query } = make(customTypes, prefix);
   return {
     mutation: prefixObject(mutation, prefix),
