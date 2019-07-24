@@ -1,10 +1,4 @@
-import {
-  GraphQLInputObjectType,
-  // GraphQLNonNull,
-  GraphQLString,
-  GraphQLBoolean,
-  GraphQLObjectType,
-} from 'graphql';
+import { GraphQLNonNull, GraphQLString, GraphQLBoolean } from 'graphql';
 import { createQuery } from './query';
 
 const query = null;
@@ -15,26 +9,13 @@ const getOrCreateQuery = (client) => {
   }
   return createQuery(client, [
     {
-      type: 'keyayun.service.tags',
+      type: 'keyayun.service.test',
       customTypes: {
-        IData: new GraphQLInputObjectType({
-          name: 'IData',
-          fields: {
-            description: { type: GraphQLString },
-            title: { type: GraphQLString },
-            done: { type: GraphQLBoolean },
-          },
-        }),
-        OData: new GraphQLObjectType({
-          name: 'OData',
-          fields: {
-            description: { type: GraphQLString },
-            title: { type: GraphQLString },
-            done: { type: GraphQLBoolean },
-          },
-        }),
+        description: { type: GraphQLString },
+        title: { type: GraphQLNonNull(GraphQLString) },
+        done: { type: GraphQLBoolean },
       },
-      prefix: 'TAGS',
+      prefix: 'TEST',
     },
   ]);
 };

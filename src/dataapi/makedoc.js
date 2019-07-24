@@ -1,4 +1,6 @@
-import { GraphQLObjectType, GraphQLString, GraphQLBoolean } from 'graphql';
+import {
+  GraphQLObjectType, GraphQLString, GraphQLBoolean, GraphQLInputObjectType,
+} from 'graphql';
 import _ from 'lodash';
 import MockManager from './mockmgr';
 import DocManager from './docmgr';
@@ -19,7 +21,14 @@ const prefixObject = (o, prefix) => {
 };
 
 const make = (customTypes, prefix) => {
-  const { IData, OData } = customTypes;
+  const IData = new GraphQLInputObjectType({
+    name: 'IData',
+    fields: customTypes,
+  });
+  const OData = new GraphQLObjectType({
+    name: 'OData',
+    fields: customTypes,
+  });
   addPrefix(IData, prefix);
   addPrefix(OData, prefix);
   const Doc = new GraphQLObjectType({

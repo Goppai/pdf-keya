@@ -1,3 +1,3 @@
-const DocManager = (type) => {};
+const DocManager = () => {};
 
 export default DocManager;
