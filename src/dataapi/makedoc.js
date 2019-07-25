@@ -37,6 +37,8 @@ const make = (customTypes, prefix) => {
       id: { type: GraphQLString },
       rev: { type: GraphQLString },
       attributes: { type: OData },
+      created_at: { type: GraphQLString },
+      updated_at: { type: GraphQLString },
     },
   });
   addPrefix(Doc, prefix);
@@ -53,6 +55,7 @@ const make = (customTypes, prefix) => {
         id: { type: GraphQLString },
         rev: { type: GraphQLString },
         data: { type: IData },
+        force: { type: GraphQLBoolean },
       },
     },
     delete: {
@@ -60,6 +63,7 @@ const make = (customTypes, prefix) => {
       args: {
         id: { type: GraphQLString },
         rev: { type: GraphQLString },
+        force: { type: GraphQLBoolean },
       },
     },
   };
@@ -77,7 +81,7 @@ const make = (customTypes, prefix) => {
 
 const makeDoc = (type, customTypes, client, prefix) => {
   // eslint-disable-next-line no-constant-condition
-  const mgr = true ? MockManager(type, client) : DocManager(type, client);
+  const mgr = false ? MockManager(type, client) : DocManager(type, client);
   const { mutation, query } = make(customTypes, prefix);
   return {
     mutation: prefixObject(mutation, prefix),
