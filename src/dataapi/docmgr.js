@@ -1,5 +1,5 @@
 import {
-  create, get, remove, put,
+  create, get, remove, put, all, nextPage,
 } from './request';
 
 const normDoc = doc => ({
@@ -12,6 +12,21 @@ const normDoc = doc => ({
 
 const DocManager = (type, client) => {
   const cachedDocs = {};
+
+  const processDocs = (params) => {
+    const {
+      docs, next, offset, total,
+    } = params;
+    docs.forEach((doc) => {
+      cachedDocs[doc.id] = doc;
+    });
+    return {
+      items: docs.map(doc => normDoc(doc)),
+      next,
+      offset,
+      total,
+    };
+  };
 
   return {
     type,
@@ -49,6 +64,26 @@ const DocManager = (type, client) => {
       });
       cachedDocs[doc.id] = doc;
       return normDoc(doc);
+    },
+    all: async ({
+      limit, sortby, skip, descending,
+    }) => {
+      const docs = await all({
+        client,
+        doctype: type,
+        limit,
+        sortby,
+        skip,
+        descending,
+      });
+      return processDocs(docs);
+    },
+    nextPage: async ({ pageUrl }) => {
+      const docs = await nextPage({
+        client,
+        pageUrl,
+      });
+      return processDocs(docs);
     },
   };
 };

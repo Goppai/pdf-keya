@@ -16,6 +16,14 @@ const makeCreateURL = ({ doctype }) => `/v1/data/${doctype}/create`;
 const makeGetURL = ({ doctype, docid }) => `/v1/data/${doctype}/${docid}`;
 const makeDeleteURL = ({ doctype, docid, rev }) => `/v1/data/${doctype}/${docid}${encodeQueryData({ rev })}`;
 const makePutURL = ({ doctype, docid }) => `/v1/data/${doctype}/${docid}`;
+const makeAllURL = ({
+  doctype, limit, sortby, skip, descending,
+}) => `/v1/data/${doctype}/all${encodeQueryData({
+  'page[limit]': limit,
+  'page[skip]': skip,
+  sortby,
+  descending,
+})}`;
 
 const create = ({ client, doctype, attributes }) => client
   .fetchJSON('POST', makeCreateURL({ doctype }), {
@@ -83,6 +91,23 @@ const modifyWithRev = async (params, modifyFN) => {
 const remove = params => modifyWithRev(params, doRemove);
 const put = params => modifyWithRev(params, doPut);
 
+const jsonToDocs = json => ({
+  next: json.links && json.links.next,
+  offset: json.meta.offset,
+  total: json.meta.total,
+  docs: json.data,
+});
+
+const all = async ({ client, ...leftParams }) => {
+  const json = await client.fetchJSON('GET', makeAllURL(leftParams));
+  return jsonToDocs(json);
+};
+
+const nextPage = async ({ client, pageUrl }) => {
+  const json = await client.fetchJSON('GET', pageUrl);
+  return jsonToDocs(json);
+};
+
 export {
-  create, get, remove, put,
+  create, get, remove, put, all, nextPage,
 };
