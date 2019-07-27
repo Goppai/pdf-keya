@@ -6,6 +6,7 @@ import {
   GraphQLList,
   GraphQLInt,
   GraphQLNonNull,
+  GraphQLUnionType,
 } from 'graphql';
 import _ from 'lodash';
 import MockManager from './mockmgr';
@@ -26,7 +27,32 @@ const prefixObject = (o, prefix) => {
   return o2;
 };
 
-const make = (customTypes, prefix) => {
+const viewUnionTypeFrom = (dbview, prefix) => {
+  const views = {};
+  const types = [];
+  dbview.forEach((view) => {
+    const viewType = new GraphQLObjectType({
+      name: view.name,
+      fields: view.types,
+    });
+    addPrefix(viewType, prefix);
+    types.push(viewType);
+    views[view.name] = viewType;
+  });
+  const type = new GraphQLUnionType({
+    name: 'ViewUnion',
+    types,
+    resolveType: (value) => {
+      console.log(value);
+      // eslint-disable-next-line no-underscore-dangle
+      return views[value._viewtype_];
+    },
+  });
+  addPrefix(type, prefix);
+  return type;
+};
+
+const make = (customTypes, prefix, dbindex, dbview) => {
   const IData = new GraphQLInputObjectType({
     name: 'IData',
     fields: customTypes,
@@ -147,13 +173,61 @@ const make = (customTypes, prefix) => {
       },
     },
   };
+  if (dbindex) {
+    query.find = {
+      type: Docs,
+      args: {
+        index: { type: GraphQLNonNull(GraphQLString) },
+        selector: { type: GraphQLNonNull(GraphQLString) },
+        sort: { type: GraphQLString },
+        limit: { type: GraphQLInt, defaultValue: 10 },
+        skip: { type: GraphQLInt, defaultValue: 0 },
+      },
+    };
+  }
+  if (dbview) {
+    const viewType = viewUnionTypeFrom(dbview, prefix);
+    const ViewDocs = new GraphQLObjectType({
+      name: 'ViewDocs',
+      fields: {
+        items: { type: GraphQLNonNull(new GraphQLList(viewType)) },
+        next: { type: GraphQLString },
+        offset: { type: GraphQLInt },
+        total: { type: GraphQLInt },
+      },
+    });
+    query.view = {
+      type: ViewDocs,
+      args: {
+        view: { type: GraphQLNonNull(GraphQLString) },
+        keys: { type: new GraphQLList(GraphQLString) },
+        start_key: { type: GraphQLString },
+        end_key: { type: GraphQLString },
+        descending: { type: GraphQLBoolean },
+        reduce: { type: GraphQLBoolean },
+        group: { type: GraphQLBoolean },
+        group_level: { type: GraphQLInt },
+        include_docs: { type: GraphQLBoolean },
+        limit: { type: GraphQLInt },
+      },
+    };
+  }
   return { mutation, query };
 };
 
-const makeDoc = (type, customTypes, client, prefix) => {
+const makeDoc = ({
+  type, customTypes, client, prefix, dbindex, dbview,
+}) => {
   // eslint-disable-next-line no-constant-condition
-  const mgr = false ? MockManager(type, client) : DocManager(type, client);
-  const { mutation, query } = make(customTypes, prefix);
+  const mgr = false
+    ? MockManager(type, client)
+    : DocManager({
+      type,
+      client,
+      dbindex,
+      dbview,
+    });
+  const { mutation, query } = make(customTypes, prefix, dbindex, dbview);
   return {
     mutation: prefixObject(mutation, prefix),
     query: prefixObject(query, prefix),

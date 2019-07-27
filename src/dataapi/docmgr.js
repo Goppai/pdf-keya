@@ -9,6 +9,8 @@ import {
   unlink,
   allLinks,
   nextLinkPage,
+  find,
+  view,
 } from './request';
 
 const normDoc = doc => ({
@@ -19,22 +21,34 @@ const normDoc = doc => ({
   attributes: doc.attributes,
 });
 
-const DocManager = (type, client) => {
+const DocManager = ({
+  type, client, dbindex, dbview,
+}) => {
   const cachedDocs = {};
 
-  const processDocs = (params) => {
+  const processDocs = (params, cache = true) => {
     const {
       docs, next, offset, total,
     } = params;
-    docs.forEach((doc) => {
-      cachedDocs[doc.id] = doc;
-    });
+    if (cache) {
+      docs.forEach((doc) => {
+        cachedDocs[doc.id] = doc;
+      });
+    }
     return {
       items: docs.map(doc => normDoc(doc)),
       next,
       offset,
       total,
     };
+  };
+  const processView = (params, viewtype) => {
+    const docs = processDocs(params, false);
+    docs.items.forEach((item) => {
+      // eslint-disable-next-line
+      item._viewtype_ = viewtype;
+    });
+    return docs;
   };
 
   return {
@@ -119,6 +133,34 @@ const DocManager = (type, client) => {
         ...params,
       });
       return processDocs(docs);
+    },
+    find: async (params) => {
+      if (!dbindex) {
+        throw new Error('no index is registered. find failed.');
+      }
+      if (dbindex.indexOf(params.index) === -1) {
+        throw new Error(`${params.index} not existed.`);
+      }
+      const docs = await find({
+        client,
+        doctype: type,
+        ...params,
+      });
+      return processDocs(docs);
+    },
+    view: async (params) => {
+      if (!dbview) {
+        throw new Error('no view is registered. view failed.');
+      }
+      if (dbview.find(v => v.name === params.view) === undefined) {
+        throw new Error(`${params.view} not exisited.`);
+      }
+      const docs = await view({
+        client,
+        doctype: type,
+        ...params,
+      });
+      return processView(docs, params.view);
     },
   };
 };

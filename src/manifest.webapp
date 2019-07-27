@@ -41,6 +41,10 @@
       "public": false
     }
   },
+  "index": {
+    "description": ["description"],
+    "title": ["title"]
+  },
   "intents": [
     {
       "action": "DUMMY",
@@ -50,7 +54,18 @@
   ],
   "doctypes": {
     "keyayun.service.test": {
-      
+      "index": {
+        "description": ["description"],
+        "title": ["title"]
+      },
+      "view": {
+        "view1": {
+          "map": "function (doc) { emit(doc.title, doc.done); }"
+        },
+        "view2": {
+          "map": "function (doc) { emit(doc.description, doc.done); }"
+        }
+      }
     }
   },
   "services": {

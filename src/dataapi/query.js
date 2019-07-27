@@ -4,7 +4,7 @@ import {
 import makeDoc from './makedoc';
 
 const createSchema = (client, docmetas) => {
-  const fn = ({ type, customTypes, prefix }) => makeDoc(type, customTypes, client, prefix);
+  const fn = params => makeDoc({ client, ...params });
   const docs = docmetas.map(fn);
 
   const query = new GraphQLObjectType({

@@ -15,6 +15,23 @@ const getOrCreateQuery = (client) => {
         title: { type: GraphQLNonNull(GraphQLString) },
         done: { type: GraphQLBoolean },
       },
+      dbindex: ['description', 'title'],
+      dbview: [
+        {
+          name: 'view1',
+          types: {
+            title: { type: GraphQLString },
+            done: { type: GraphQLBoolean },
+          },
+        },
+        {
+          name: 'view2',
+          types: {
+            description: { type: GraphQLString },
+            done: { type: GraphQLBoolean },
+          },
+        },
+      ],
       prefix: 'TEST',
     },
   ]);

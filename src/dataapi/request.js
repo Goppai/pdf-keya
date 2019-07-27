@@ -33,6 +33,44 @@ const makeAllLinksURL = ({
   'page[skip]': skip,
   descending,
 })}`;
+const makeFindURL = ({
+  doctype, index, selector, sort, limit, skip,
+}) => {
+  const queryParams = {
+    index,
+    selector,
+    limit,
+    skip,
+  };
+  if (sort) {
+    queryParams.sort = sort;
+  }
+  return `/v1/data/${doctype}/find${encodeQueryData(queryParams)}`;
+};
+
+const viewParameters = [
+  'view',
+  'key',
+  'keys',
+  'start_key',
+  'end_key',
+  'descending',
+  'reduce',
+  'group',
+  'group_level',
+  'include_docs',
+];
+const makeViewURL = ({ doctype, limit, ...leftParams }) => {
+  const queryParams = {
+    'page[limit]': limit,
+  };
+  viewParameters.forEach((k) => {
+    if (leftParams[k] != null) {
+      queryParams[k] = leftParams[k];
+    }
+  });
+  return `/v1/data/${doctype}/view${encodeQueryData(queryParams)}`;
+};
 
 const create = ({ client, doctype, attributes }) => client
   .fetchJSON('POST', makeCreateURL({ doctype }), {
@@ -142,6 +180,39 @@ const allLinks = async ({ client, ...leftParams }) => {
 
 const nextLinkPage = nextPage;
 
+const find = async ({ client, ...leftParams }) => {
+  const json = await client.fetchJSON('GET', makeFindURL(leftParams));
+  return jsonToDocs(json);
+};
+
+const viewJsonToDocs = json => ({
+  next: json.links && json.links.next,
+  docs: json.data,
+});
+
+const view = async ({ client, keys, ...leftParams }) => {
+  const params = { ...leftParams };
+  if (keys != null && keys.length === 1) {
+    // eslint-disable-next-line prefer-destructuring
+    params.key = keys[0];
+  }
+  const json = await client.fetchJSON('GET', makeViewURL(params));
+  const docs = viewJsonToDocs(json);
+  docs.view = leftParams.view;
+  return docs;
+};
+
 export {
-  create, get, remove, put, all, nextPage, link, unlink, allLinks, nextLinkPage,
+  create,
+  get,
+  remove,
+  put,
+  all,
+  nextPage,
+  link,
+  unlink,
+  allLinks,
+  nextLinkPage,
+  find,
+  view,
 };
