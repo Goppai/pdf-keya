@@ -1,5 +1,14 @@
 import {
-  create, get, remove, put, all, nextPage,
+  create,
+  get,
+  remove,
+  put,
+  all,
+  nextPage,
+  link,
+  unlink,
+  allLinks,
+  nextLinkPage,
 } from './request';
 
 const normDoc = doc => ({
@@ -65,23 +74,49 @@ const DocManager = (type, client) => {
       cachedDocs[doc.id] = doc;
       return normDoc(doc);
     },
-    all: async ({
-      limit, sortby, skip, descending,
-    }) => {
+    all: async (params) => {
       const docs = await all({
         client,
         doctype: type,
-        limit,
-        sortby,
-        skip,
-        descending,
+        ...params,
       });
       return processDocs(docs);
     },
-    nextPage: async ({ pageUrl }) => {
+    nextPage: async (params) => {
       const docs = await nextPage({
         client,
-        pageUrl,
+        ...params,
+      });
+      return processDocs(docs);
+    },
+    link: async (params) => {
+      await link({
+        client,
+        rdoctype: type,
+        ...params,
+      });
+      return true;
+    },
+    unlink: async (params) => {
+      await unlink({
+        client,
+        rdoctype: type,
+        ...params,
+      });
+      return true;
+    },
+    allLinks: async (params) => {
+      const docs = await allLinks({
+        client,
+        rdoctype: type,
+        ...params,
+      });
+      return processDocs(docs);
+    },
+    nextLinkPage: async (params) => {
+      const docs = await nextLinkPage({
+        client,
+        ...params,
       });
       return processDocs(docs);
     },

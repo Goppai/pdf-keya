@@ -24,6 +24,15 @@ const makeAllURL = ({
   sortby,
   descending,
 })}`;
+const makeLinkURL = ({ doctype, id }) => `/v1/references/${doctype}/${id}`;
+const makeAllLinksURL = ({
+  doctype, id, limit, skip, descending, rdoctype,
+}) => `/v1/references/${doctype}/${id}${encodeQueryData({
+  doctype: rdoctype,
+  'page[limit]': limit,
+  'page[skip]': skip,
+  descending,
+})}`;
 
 const create = ({ client, doctype, attributes }) => client
   .fetchJSON('POST', makeCreateURL({ doctype }), {
@@ -108,6 +117,31 @@ const nextPage = async ({ client, pageUrl }) => {
   return jsonToDocs(json);
 };
 
+const linkImpl = async (method, {
+  client, rdoctype, rids, ...leftParams
+}) => {
+  const data = {
+    data: rids.map(rid => ({
+      type: rdoctype,
+      id: rid,
+    })),
+  };
+  const json = await client.fetchJSON(method, makeLinkURL(leftParams), data);
+  return json;
+};
+
+const link = linkImpl.bind(null, 'POST');
+const unlink = linkImpl.bind(null, 'DELETE');
+
+const jsonToLinks = jsonToDocs;
+
+const allLinks = async ({ client, ...leftParams }) => {
+  const json = await client.fetchJSON('GET', makeAllLinksURL(leftParams));
+  return jsonToLinks(json);
+};
+
+const nextLinkPage = nextPage;
+
 export {
-  create, get, remove, put, all, nextPage,
+  create, get, remove, put, all, nextPage, link, unlink, allLinks, nextLinkPage,
 };

@@ -11,19 +11,6 @@ import _ from 'lodash';
 import MockManager from './mockmgr';
 import DocManager from './docmgr';
 
-// -  # all(limit: Int = 10, sortby: String, descending: Boolean = true): Docs
-// -  # nextPages(pagesUrl: String): Docs
-// -  # find(index: String!, selector: String!, sort: String, fields: string, limit: Int = 10: Docs
-// -  # view(view: String, key: String, keys: String, start_key: String,
-// end_key: String, descending: Boolean, group: Boolean = false,
-// group_level: Int, include_docs: Boolean = true, limit: Int = 10): Docs
-// -  # serach(keywords: [String]!, selector: String, sort: String,
-// include_docs: Boolean, limit: Int = 10): Docs
-// -  # link(type: String!, id: ID!, refID: ID!): Boolean
-// -  # unlink(type: String!, id: ID!, refID: ID!): Boolean
-// -  # allLinks(type: String!, id: ID!, limit: Int = 10, descending: Boolean = true): Links
-// -  # nextLinks(linksUrl: String): Links
-
 const prefixName = (name, prefix) => `${prefix}_${name}`;
 
 const addPrefix = (dataType, prefix) => {
@@ -69,6 +56,14 @@ const make = (customTypes, prefix) => {
       total: { type: GraphQLInt },
     },
   });
+  const Links = new GraphQLObjectType({
+    name: 'Links',
+    fields: {
+      items: { type: GraphQLNonNull(new GraphQLList(Doc)) },
+      next: { type: GraphQLString },
+      total: { type: GraphQLInt },
+    },
+  });
 
   addPrefix(Doc, prefix);
   const mutation = {
@@ -95,6 +90,22 @@ const make = (customTypes, prefix) => {
         force: { type: GraphQLBoolean },
       },
     },
+    link: {
+      type: GraphQLBoolean,
+      args: {
+        doctype: { type: GraphQLNonNull(GraphQLString) },
+        id: { type: GraphQLNonNull(GraphQLString) },
+        rids: { type: GraphQLNonNull(new GraphQLList(GraphQLString)) },
+      },
+    },
+    unlink: {
+      type: GraphQLBoolean,
+      args: {
+        doctype: { type: GraphQLNonNull(GraphQLString) },
+        id: { type: GraphQLNonNull(GraphQLString) },
+        rids: { type: GraphQLNonNull(new GraphQLList(GraphQLString)) },
+      },
+    },
   };
   const query = {
     type: { type: GraphQLString },
@@ -115,6 +126,22 @@ const make = (customTypes, prefix) => {
     },
     nextPage: {
       type: Docs,
+      args: {
+        pageUrl: { type: GraphQLNonNull(GraphQLString) },
+      },
+    },
+    allLinks: {
+      type: Links,
+      args: {
+        id: { type: GraphQLString },
+        doctype: { type: GraphQLString },
+        limit: { type: GraphQLInt, defaultValue: 10 },
+        skip: { type: GraphQLInt, defaultValue: 0 },
+        descending: { type: GraphQLBoolean, defaultValue: false },
+      },
+    },
+    nextLinkPage: {
+      type: Links,
       args: {
         pageUrl: { type: GraphQLNonNull(GraphQLString) },
       },
