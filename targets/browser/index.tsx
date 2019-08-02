@@ -2,7 +2,9 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import { GQLQueryContext, GQLQueryContextInterface, createQuery } from 'gqlquery';
+import {
+  GQLQueryContext, GQLQueryContextInterface, createQuery, DebuggerUI,
+} from 'gqlquery';
 import { IntlProvider, updateMessages } from 'locales';
 import { Client, ClientContext, ClientDef } from 'seal-client/client';
 
@@ -24,6 +26,7 @@ const renderApp = (
       <ClientContext.Provider value={client}>
         <GQLQueryContext.Provider value={gqlquery}>
           <App />
+          <DebuggerUI />
         </GQLQueryContext.Provider>
       </ClientContext.Provider>
     </IntlProvider>,

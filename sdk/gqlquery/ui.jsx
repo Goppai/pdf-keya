@@ -1,39 +1,56 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button } from 'antd';
-import { ClientContext } from 'seal-client/client';
-import { getOrCreateQuery } from './entry';
+import { GQLQueryContext } from './context';
 
 import DebuggerCreator from './debugger';
 
-let Debugger = null;
-let query = null;
-const createDebugger = (client) => {
-  if (Debugger != null) {
+let UI = () => <div />;
+
+if (process.env.NODE_ENV === 'development') {
+  let Debugger = null;
+  const createDebugger = (query) => {
+    if (Debugger != null) {
+      return { query, Debugger };
+    }
+    Debugger = DebuggerCreator(query);
     return { query, Debugger };
-  }
-  query = getOrCreateQuery(client);
-  Debugger = DebuggerCreator(query);
-  return { query, Debugger };
-};
+  };
 
-const add = () => {
-  // eslint-disable-next-line no-console
-  query('{ hello }').then(console.log);
-};
-const list = () => {};
-const del = () => {};
+  UI = () => {
+    const { query } = useContext(GQLQueryContext);
+    createDebugger(query);
+    const [hidden, setHideen] = useState(true);
+    return (
+      <React.Fragment>
+        <Button
+          style={{
+            zIndex: 1000001,
+            position: 'fixed',
+            bottom: 0,
+            right: 0,
+          }}
+          onClick={() => setHideen(!hidden)}
+        >
+          切换调试器
+        </Button>
+        <div
+          style={{
+            zIndex: 100000,
+            position: 'fixed',
+            right: 0,
+            left: 0,
+            top: 0,
+            bottom: 0,
+            display: hidden ? 'none' : 'block',
+          }}
+        >
+          {Debugger}
+        </div>
+      </React.Fragment>
+    );
+  };
+}
 
-const UI = () => {
-  const client = useContext(ClientContext);
-  createDebugger(client);
-  return (
-    <div>
-      <Button onClick={add}>Add</Button>
-      <Button onClick={list}>List</Button>
-      <Button onClick={del}>Delete</Button>
-      <div style={{ height: 800 }}>{Debugger}</div>
-    </div>
-  );
-};
+const M = UI;
 
-export default UI;
+export default M;

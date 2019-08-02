@@ -1,29 +1,27 @@
 import React from 'react';
 import { HashRouter } from 'react-router-dom';
 
-import { injectIntl, InjectedIntlProps } from 'react-intl';
-import { IntlConsumer, ContextDef } from 'locales';
-import { Button } from 'antd';
-import NotifTest from './NotifTest';
+import { Tabs } from 'antd';
 
-const App = ({ intl }: InjectedIntlProps) => (
+import NotifTest from './NotifTest';
+import TranslateTest from './TranslateTest';
+
+const { TabPane } = Tabs;
+
+const App = () => (
   <HashRouter>
-    <IntlConsumer>
-      {({ switchLanguage }: ContextDef) => (
-        <React.Fragment>
-          <Button onClick={() => switchLanguage('en')}>
-            {intl.formatMessage({ id: 'example.toenglish' })}
-          </Button>
-          <Button onClick={() => switchLanguage('zh')}>
-            {intl.formatMessage({ id: 'example.tochinese' })}
-          </Button>
-          <div>{intl.formatMessage({ id: 'example.hello' })}</div>
-          {/* <UI /> */}
-          <NotifTest />
-        </React.Fragment>
-      )}
-    </IntlConsumer>
+    <Tabs defaultActiveKey="1">
+      <TabPane tab="Translate" key="1">
+        <TranslateTest />
+      </TabPane>
+      <TabPane tab="Notification" key="2">
+        <NotifTest />
+      </TabPane>
+      <TabPane tab="gqlquery" key="3">
+        Content of Tab Pane 3
+      </TabPane>
+    </Tabs>
   </HashRouter>
 );
 
-export default injectIntl(App);
+export default App;
