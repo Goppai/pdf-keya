@@ -1242,6 +1242,11 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/graphql@^14.2.3":
+  version "14.2.3"
+  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-14.2.3.tgz#cfc6420a67eb20420786f90112357921974593b9"
+  integrity sha512-UoCovaxbJIxagCvVfalfK7YaNhmxj3BQFRQ2RHQKLiu+9wNXhJnlbspsLHt/YQM99IaLUUFJNzCwzc6W0ypMeQ==
+
 "@types/history@*":
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.2.tgz#0e670ea254d559241b6eeb3894f8754991e73220"
@@ -2648,7 +2653,7 @@ chalk@2.4.1:
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
 
-chalk@2.4.2, chalk@^2.0.0, chalk@^2.0.1, chalk@^2.1.0, chalk@^2.3.2, chalk@^2.4.0, chalk@^2.4.1, chalk@^2.4.2:
+chalk@2.4.2, chalk@^2.0.0, chalk@^2.0.1, chalk@^2.1.0, chalk@^2.4.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
   integrity sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==
@@ -9401,16 +9406,6 @@ react-error-overlay@^5.1.4:
   version "5.1.6"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-5.1.6.tgz#0cd73407c5d141f9638ae1e0c63e7b2bf7e9929d"
   integrity sha512-X1Y+0jR47ImDVr54Ab6V9eGk0Hnu7fVWGeHQSOXHf/C2pF9c6uy3gef8QUeuUiWlNb0i08InPSE5a/KJzNzw1Q==
-
-react-intl-translations-manager@^5.0.3:
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/react-intl-translations-manager/-/react-intl-translations-manager-5.0.3.tgz#aee010ecf35975673e033ca5d7d3f4147894324d"
-  integrity sha512-EfBeugnOGFcdUbQyY9TqBMbuauQ8wm73ZqFr0UqCljhbXl7YDHQcVzclWFRkVmlUffzxitLQFhAZEVVeRNQSwA==
-  dependencies:
-    chalk "^2.3.2"
-    glob "^7.1.2"
-    json-stable-stringify "^1.0.1"
-    mkdirp "^0.5.1"
 
 react-intl@^2.8.0:
   version "2.9.0"

@@ -9,27 +9,28 @@ import {
   GraphQLUnionType,
 } from 'graphql';
 import _ from 'lodash';
-import MockManager from './mockmgr';
+import { ClientDef } from 'seal-client/client';
 import DocManager from './docmgr';
+import { DataAPISchema } from './types';
 
-const prefixName = (name, prefix) => `${prefix}_${name}`;
+const prefixName = (name: string, prefix: string): string => `${prefix}_${name}`;
 
-const addPrefix = (dataType, prefix) => {
+const addPrefix = (dataType: { name: string }, prefix: string): void => {
   // eslint-disable-next-line no-param-reassign
   dataType.name = prefixName(dataType.name, prefix);
 };
 
-const prefixObject = (o, prefix) => {
-  const o2 = {};
+const prefixObject = (o: { [key: string]: any }, prefix: string) => {
+  const o2 = Object();
   _.forEach(o, (v, k) => {
     o2[prefixName(k, prefix)] = v;
   });
   return o2;
 };
 
-const viewUnionTypeFrom = (dbview, prefix) => {
-  const views = {};
-  const types = [];
+const viewUnionTypeFrom = (dbview: Array<any>, prefix: string) => {
+  const views = Object();
+  const types: Array<any> = [];
   dbview.forEach((view) => {
     const viewType = new GraphQLObjectType({
       name: view.name,
@@ -42,17 +43,13 @@ const viewUnionTypeFrom = (dbview, prefix) => {
   const type = new GraphQLUnionType({
     name: 'ViewUnion',
     types,
-    resolveType: (value) => {
-      console.log(value);
-      // eslint-disable-next-line no-underscore-dangle
-      return views[value._viewtype_];
-    },
+    resolveType: value => views[value.internal_viewtype],
   });
   addPrefix(type, prefix);
   return type;
 };
 
-const make = (customTypes, prefix, dbindex, dbview) => {
+const make = (customTypes: any, prefix: string, dbindex?: Array<string>, dbview?: Array<any>) => {
   const IData = new GraphQLInputObjectType({
     name: 'IData',
     fields: customTypes,
@@ -92,7 +89,7 @@ const make = (customTypes, prefix, dbindex, dbview) => {
   });
 
   addPrefix(Doc, prefix);
-  const mutation = {
+  const mutation: { [key: string]: any } = {
     create: {
       type: Doc,
       args: {
@@ -133,7 +130,7 @@ const make = (customTypes, prefix, dbindex, dbview) => {
       },
     },
   };
-  const query = {
+  const query: { [key: string]: any } = {
     type: { type: GraphQLString },
     get: {
       type: Doc,
@@ -215,18 +212,19 @@ const make = (customTypes, prefix, dbindex, dbview) => {
   return { mutation, query };
 };
 
-const makeDoc = ({
-  type, customTypes, client, prefix, dbindex, dbview,
-}) => {
+const makeDoc = (
+  client: ClientDef,
+  {
+    type, customTypes, prefix, dbindex, dbview,
+  }: DataAPISchema,
+) => {
   // eslint-disable-next-line no-constant-condition
-  const mgr = false
-    ? MockManager(type, client)
-    : DocManager({
-      type,
-      client,
-      dbindex,
-      dbview,
-    });
+  const mgr = DocManager({
+    type,
+    client,
+    dbindex,
+    dbview,
+  });
   const { mutation, query } = make(customTypes, prefix, dbindex, dbview);
   return {
     mutation: prefixObject(mutation, prefix),

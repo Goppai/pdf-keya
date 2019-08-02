@@ -56,7 +56,8 @@
     "keyayun.service.test": {
       "index": {
         "description": ["description"],
-        "title": ["title"]
+        "title": ["title"],
+        "done": ["done"]
       },
       "view": {
         "view1": {
@@ -66,6 +67,9 @@
           "map": "function (doc) { emit(doc.description, doc.done); }"
         }
       }
+    },
+    "keyayun.service.tags": {
+
     }
   },
   "services": {

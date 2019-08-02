@@ -18,7 +18,8 @@
     "baseUrl": "",
     "paths": {
       "locales": ["sdk/locales"],
-      "seal-client/*": ["sdk/seal-client/*"]
+      "seal-client/*": ["sdk/seal-client/*"],
+      "gqlquery": ["sdk/gqlquery"]
     }
   },
   "include": ["src", "sdk", "targets", "env.d.ts"],

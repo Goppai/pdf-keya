@@ -46,7 +46,7 @@ const DocManager = ({
     const docs = processDocs(params, false);
     docs.items.forEach((item) => {
       // eslint-disable-next-line
-      item._viewtype_ = viewtype;
+      item.internal_viewtype = viewtype;
     });
     return docs;
   };

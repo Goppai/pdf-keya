@@ -1,10 +1,12 @@
 import {
   GraphQLObjectType, GraphQLSchema, printSchema, graphql,
 } from 'graphql';
+import { ClientDef } from 'seal-client/client';
 import makeDoc from './makedoc';
+import { queryFunc, DataAPISchema } from './types';
 
-const createSchema = (client, docmetas) => {
-  const fn = params => makeDoc({ client, ...params });
+const createSchema = (client: ClientDef, docmetas: Array<DataAPISchema>) => {
+  const fn = (params: DataAPISchema) => makeDoc(client, params);
   const docs = docmetas.map(fn);
 
   const query = new GraphQLObjectType({
@@ -30,18 +32,15 @@ const createSchema = (client, docmetas) => {
   };
 };
 
-const createQuery = (client, docmetas) => {
+const createQuery = (client: ClientDef, docmetas: Array<DataAPISchema>): queryFunc => {
   const { schema, resolvers } = createSchema(client, docmetas);
-  return async (source, variableValues, operationName) => {
-    const abc = await graphql({
-      schema,
-      source,
-      rootValue: resolvers,
-      variableValues,
-      operationName,
-    });
-    return abc;
-  };
+  return (source, variableValues, operationName) => graphql<any>({
+    schema,
+    source,
+    rootValue: resolvers,
+    variableValues,
+    operationName,
+  });
 };
 
 export { createQuery };
