@@ -93,7 +93,7 @@ const make = (customTypes: any, prefix: string, dbindex?: Array<string>, dbview?
     create: {
       type: Doc,
       args: {
-        data: { type: IData },
+        data: { type: GraphQLNonNull(IData) },
       },
     },
     put: {
@@ -156,8 +156,8 @@ const make = (customTypes: any, prefix: string, dbindex?: Array<string>, dbview?
     allLinks: {
       type: Links,
       args: {
-        id: { type: GraphQLString },
-        doctype: { type: GraphQLString },
+        id: { type: GraphQLNonNull(GraphQLString) },
+        doctype: { type: GraphQLNonNull(GraphQLString) },
         limit: { type: GraphQLInt, defaultValue: 10 },
         skip: { type: GraphQLInt, defaultValue: 0 },
         descending: { type: GraphQLBoolean, defaultValue: false },

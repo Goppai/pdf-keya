@@ -5,6 +5,7 @@ import { Tabs } from 'antd';
 
 import NotifTest from './NotifTest';
 import TranslateTest from './TranslateTest';
+import TODOList from './TodoList';
 
 const { TabPane } = Tabs;
 
@@ -18,7 +19,7 @@ const App = () => (
         <NotifTest />
       </TabPane>
       <TabPane tab="gqlquery" key="3">
-        Content of Tab Pane 3
+        <TODOList />
       </TabPane>
     </Tabs>
   </HashRouter>

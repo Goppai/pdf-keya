@@ -36,7 +36,7 @@ const DocManager = ({
       });
     }
     return {
-      items: docs.map(doc => normDoc(doc)),
+      items: docs.filter(doc => doc.id != null).map(doc => normDoc(doc)),
       next,
       offset,
       total,
