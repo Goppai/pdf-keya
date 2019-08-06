@@ -2,7 +2,9 @@ import { ExecutionResult } from 'graphql';
 
 export interface ViewConfig {
   name: string;
+  view: string;
   types: any;
+  props?: any;
 }
 
 export interface DataAPISchema {

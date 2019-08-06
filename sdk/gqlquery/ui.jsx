@@ -33,19 +33,20 @@ if (process.env.NODE_ENV === 'development') {
         >
           切换调试器
         </Button>
-        <div
-          style={{
-            zIndex: 100000,
-            position: 'fixed',
-            right: 0,
-            left: 0,
-            top: 0,
-            bottom: 0,
-            display: hidden ? 'none' : 'block',
-          }}
-        >
-          {Debugger}
-        </div>
+        {!hidden && (
+          <div
+            style={{
+              zIndex: 100,
+              position: 'fixed',
+              right: 0,
+              left: 0,
+              top: 48,
+              bottom: 0,
+            }}
+          >
+            {Debugger}
+          </div>
+        )}
       </React.Fragment>
     );
   };

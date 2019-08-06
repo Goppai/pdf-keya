@@ -11,16 +11,12 @@ const createSchema = (client: ClientDef, docmetas: Array<DataAPISchema>) => {
 
   const query = new GraphQLObjectType({
     name: 'Query',
-    fields: {
-      ...docs[0].query,
-    },
+    fields: docs.reduce((r, item) => ({ ...r, ...item.query }), {}),
   });
 
   const mutation = new GraphQLObjectType({
     name: 'Mutation',
-    fields: {
-      ...docs[0].mutation,
-    },
+    fields: docs.reduce((r, item) => ({ ...r, ...item.mutation }), {}),
   });
 
   const schema = new GraphQLSchema({ query, mutation });
@@ -28,7 +24,7 @@ const createSchema = (client: ClientDef, docmetas: Array<DataAPISchema>) => {
   return {
     gql: printSchema(schema),
     schema,
-    resolvers: { ...docs[0].resolvers },
+    resolvers: docs.reduce((r, item) => ({ ...r, ...item.resolvers }), {}),
   };
 };
 

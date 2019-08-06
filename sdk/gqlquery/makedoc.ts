@@ -87,7 +87,8 @@ const make = (customTypes: any, prefix: string, dbindex?: Array<string>, dbview?
       total: { type: GraphQLInt },
     },
   });
-
+  addPrefix(Docs, prefix);
+  addPrefix(Links, prefix);
   addPrefix(Doc, prefix);
   const mutation: { [key: string]: any } = {
     create: {
@@ -189,10 +190,9 @@ const make = (customTypes: any, prefix: string, dbindex?: Array<string>, dbview?
       fields: {
         items: { type: GraphQLNonNull(new GraphQLList(viewType)) },
         next: { type: GraphQLString },
-        offset: { type: GraphQLInt },
-        total: { type: GraphQLInt },
       },
     });
+    addPrefix(ViewDocs, prefix);
     query.view = {
       type: ViewDocs,
       args: {
@@ -201,10 +201,6 @@ const make = (customTypes: any, prefix: string, dbindex?: Array<string>, dbview?
         start_key: { type: GraphQLString },
         end_key: { type: GraphQLString },
         descending: { type: GraphQLBoolean },
-        reduce: { type: GraphQLBoolean },
-        group: { type: GraphQLBoolean },
-        group_level: { type: GraphQLInt },
-        include_docs: { type: GraphQLBoolean },
         limit: { type: GraphQLInt },
       },
     };

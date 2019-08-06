@@ -43,7 +43,9 @@ const DocManager = ({
     };
   };
   const processView = (params, viewtype) => {
-    const docs = processDocs(params, false);
+    const docs = {
+      items: params.docs[0] ? params.docs[0].meta.value : [],
+    };
     docs.items.forEach((item) => {
       // eslint-disable-next-line
       item.internal_viewtype = viewtype;
@@ -152,13 +154,16 @@ const DocManager = ({
       if (!dbview) {
         throw new Error('no view is registered. view failed.');
       }
-      if (dbview.find(v => v.name === params.view) === undefined) {
+      const foundView = dbview.find(v => v.name === params.view);
+      if (foundView === undefined) {
         throw new Error(`${params.view} not exisited.`);
       }
       const docs = await view({
         client,
         doctype: type,
         ...params,
+        ...foundView.props,
+        view: foundView.view,
       });
       return processView(docs, params.view);
     },
