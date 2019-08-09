@@ -41,6 +41,10 @@
       "public": false
     }
   },
+  "index": {
+    "description": ["description"],
+    "title": ["title"]
+  },
   "intents": [
     {
       "action": "DUMMY",
@@ -50,7 +54,35 @@
   ],
   "doctypes": {
     "keyayun.service.test": {
-
+      "index": {
+        "description": ["description"],
+        "title": ["title"],
+        "done": ["done"]
+      },
+      "view": {
+        "view1": {
+          "map": "function (doc) { emit(doc.title, doc.done); }"
+        },
+        "view2": {
+          "map": "function (doc) { emit(doc.description, doc.done); }"
+        }
+      }
+    },
+    "keyayun.service.notifications1": {
+      "index": {
+        "sort-by-read-creation": ["read"],
+        "sort-by-app-creation": ["fromApp"],
+        "sort-by-app-unread-creation": ["read", "fromApp"]
+      },
+      "view": {
+        "unique-by-app": {
+          "map": "function map(doc) { emit('key', {app: doc.fromApp, read: doc.read}); }",
+          "reduce": "function(keys, values, rereduce) { var unique_labels = {}; var res = []; var traverseArr = function (arr) { arr.forEach(function (val) { if (Array.isArray(val)) { traverseArr(val); } else if (val.app) { var key = val.app; if (!unique_labels[key]) { unique_labels[key] = { readCount: val.readCount == null ? +(val.read) : val.readCount, unreadCount: val.unreadCount == null ? +(!val.read) : val.unreadCount, }; res.push(val); } else { unique_labels[key].readCount += val.readCount == null ? +(val.read) : val.readCount; unique_labels[key].unreadCount += val.unreadCount == null ? +(!val.read) : val.unreadCount; } } }); }; traverseArr(values); return res.map(function (val) { delete val.read; val.readCount = unique_labels[val.app].readCount; val.unreadCount = unique_labels[val.app].unreadCount; return val; }); }"
+        }
+      }
+    },
+    "keyayun.seal.files": {
+      
     }
   },
   "services": {
@@ -75,6 +107,10 @@
     "test": {
       "description": "",
       "type": "keyayun.service.test"
+    },
+    "notif": {
+      "description": "",
+      "type": "keyayun.service.notifications1"
     }
   }
 }

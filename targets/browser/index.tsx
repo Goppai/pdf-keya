@@ -2,20 +2,36 @@
 import React from 'react';
 import { render } from 'react-dom';
 
+import {
+  GQLQueryContext, GQLQueryContextInterface, createQuery, DebuggerUI,
+} from 'gqlquery';
 import { IntlProvider, updateMessages } from 'locales';
 import { Client, ClientContext, ClientDef } from 'seal-client/client';
 
 import App from '../../src/App';
+import schema from '../../src/schema';
 import appIcon from '../../src/icons/icon.svg';
 import manifest from '../../src/manifest.webapp';
 
 updateMessages(require.context('../../src/locales', false, /\.json$/));
 
-const renderApp = (client: ClientDef, appLocale: string, timeZone: string) => {
+const renderApp = (
+  client: ClientDef,
+  gqlquery: GQLQueryContextInterface | null,
+  appLocale: string,
+  timeZone: string,
+) => {
   render(
     <IntlProvider locale={appLocale} timeZone={timeZone}>
       <ClientContext.Provider value={client}>
-        <App />
+        {gqlquery ? (
+          <GQLQueryContext.Provider value={gqlquery}>
+            <App />
+            <DebuggerUI />
+          </GQLQueryContext.Provider>
+        ) : (
+          <App />
+        )}
       </ClientContext.Provider>
     </IntlProvider>,
     document.querySelector('[role=application]'),
@@ -41,6 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
     token: data.token,
   });
 
+  const gqlquery = schema.length > 0 ? createQuery(client, schema) : null;
+
   const iconPath: string = getDataOrDefault(data.iconPath, appIcon);
   const appName: string = getDataOrDefault(data.appName, manifest.name);
   const appLocale: string = getDataOrDefault(data.locale, 'zh');
@@ -55,5 +73,5 @@ document.addEventListener('DOMContentLoaded', () => {
     timeZone,
   });
 
-  renderApp(client, appLocale, timeZone);
+  renderApp(client, gqlquery && { query: gqlquery }, appLocale, timeZone);
 });

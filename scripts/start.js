@@ -59,6 +59,7 @@ const port = slugTypeToPort(manifest.slug) || 3000;
 
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || port;
 const HOST = process.env.HOST || ip.address();
+console.log(HOST);
 
 if (process.env.HOST) {
   console.log(
