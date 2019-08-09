@@ -26,3 +26,4 @@ yarn-error.log*
 tmp
 src/locales/output
 trans-tmp
+.history

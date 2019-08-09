@@ -17,17 +17,21 @@ updateMessages(require.context('../../src/locales', false, /\.json$/));
 
 const renderApp = (
   client: ClientDef,
-  gqlquery: GQLQueryContextInterface,
+  gqlquery: GQLQueryContextInterface | null,
   appLocale: string,
   timeZone: string,
 ) => {
   render(
     <IntlProvider locale={appLocale} timeZone={timeZone}>
       <ClientContext.Provider value={client}>
-        <GQLQueryContext.Provider value={gqlquery}>
+        {gqlquery ? (
+          <GQLQueryContext.Provider value={gqlquery}>
+            <App />
+            <DebuggerUI />
+          </GQLQueryContext.Provider>
+        ) : (
           <App />
-          <DebuggerUI />
-        </GQLQueryContext.Provider>
+        )}
       </ClientContext.Provider>
     </IntlProvider>,
     document.querySelector('[role=application]'),
@@ -53,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     token: data.token,
   });
 
-  const gqlquery = createQuery(client, schema);
+  const gqlquery = schema.length > 0 ? createQuery(client, schema) : null;
 
   const iconPath: string = getDataOrDefault(data.iconPath, appIcon);
   const appName: string = getDataOrDefault(data.appName, manifest.name);
@@ -69,5 +73,5 @@ document.addEventListener('DOMContentLoaded', () => {
     timeZone,
   });
 
-  renderApp(client, { query: gqlquery }, appLocale, timeZone);
+  renderApp(client, gqlquery && { query: gqlquery }, appLocale, timeZone);
 });
