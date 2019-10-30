@@ -1,1 +1,3 @@
-export { default } from './sample';
+import App from './App.page';
+
+export default App;

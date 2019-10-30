@@ -82,6 +82,7 @@ module.exports = {
   appCozyBarCss: dev => resolveApp(`node_modules/cozy-bar/dist/cozy-bar.${dev ? '' : 'min.'}css`),
   appCozyClientJs: () => resolveApp('node_modules/cozy-client-js/dist/cozy-client.js'),
   appManifest: () => resolveApp('src/manifest.webapp'),
+  pdfWorkerJs: () => resolveApp('node_modules/pdfjs-dist/build/pdf.worker.js'),
   icons: resolveApp('src/icons'),
   sdk: resolveApp('sdk'),
   serviceJs: resolveModule(resolveApp, 'targets/services/index'),
