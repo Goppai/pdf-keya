@@ -5,9 +5,6 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   height: 48px;
   width:100%;
-  background: #FFFFFF;
-  box-shadow: 2px 0 8px 0 rgba(0,0,0,0.15);
-  float: left;
   padding: 0 5px;
   z-index: 999;
 `;

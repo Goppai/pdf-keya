@@ -29,7 +29,7 @@ const Text = styled.span`
 `;
 
 const Paging = ({
-  current = 0, total = 0, onPrev, onNext, onPageChange, download, preview,
+  current = 0, total = 0, onPrev, onNext, onPageChange,
 }) => {
   const [pageValue, setPageValue] = useState(current);
   useLayoutEffect(() => {
@@ -52,8 +52,6 @@ const Paging = ({
       <Input type="number" onChange={onValueChange} onKeyDown={onKeyDown} value={pageValue} />
       <Text>/ {total}</Text>
       <Icon type="right" ml={8} onClick={onNext} />
-      <Icon type="download" onClick={download} />
-      <Icon type="printer" onClick={preview} />
     </Container>
   );
 };
@@ -64,8 +62,6 @@ Paging.propTypes = {
   onPrev: PropTypes.func.isRequired,
   onNext: PropTypes.func.isRequired,
   onPageChange: PropTypes.func.isRequired,
-  download: PropTypes.func.isRequired,
-  preview: PropTypes.func.isRequired,
 };
 
 export default Paging;
