@@ -5,15 +5,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import PDFJS from 'pdfjs-dist';
-import emitter from 'utils/ev';
-import ToolBar, { ToolBarWrapper } from './components/ToolBar';
+import emitter from 'ev';
 import Controller from './Controller';
 import 'pdfjs-dist/web/pdf_viewer.css';
 import withLoading from './withLoading';
 
 PDFJS.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
-// const pdfjsWorker = import('pdfjs-dist/build/pdf.worker.entry');
-
 
 const Container = styled.div`
   width: 100%;
@@ -28,21 +25,16 @@ const ViewerContainer = styled.div`
     border: 2px;
     border-top: 0px;
     margin-bottom: 4px;
-    margin-top: 30px;  
+    margin-top: 30px;
   }
   .pdfViewer .page:nth-of-type(n)::after {
-    content:attr(data-page-number);
+    content: attr(data-page-number);
   }
 `;
 
-const ZOOM_DEFAULT = 100;
-const ZOOM_MAX = 1000;
-const ZOOM_MIN = 20;
-const ZOOM_STEP = 10;
 class PdfViewer extends React.Component {
   static propTypes = {
     url: PropTypes.string.isRequired,
-    loading: PropTypes.bool.isRequired,
     setLoading: PropTypes.func.isRequired,
     onError: PropTypes.func.isRequired,
   };
@@ -60,10 +52,6 @@ class PdfViewer extends React.Component {
   controller = null;
 
   state = {
-    showToolbar: true,
-    totalPage: 0,
-    currentPage: 1,
-    scaleValue: ZOOM_DEFAULT,
     clickPage: null,
     pdfViewer: null,
   };
@@ -73,8 +61,6 @@ class PdfViewer extends React.Component {
     this.eventEmitter = emitter.addListener('callMe', (msg) => {
       this.setState({ pdfViewer: msg });
     });
-    this.controller.eventBus.on('pagechanging', this.onPageChange);
-    this.controller.eventBus.on('scalechanging', this.onScaleChange);
     this.pdfContainer.current.addEventListener('pagesinit', this.onPageInit);
     this.pdfContainer.current.addEventListener('click', this.onClickPage);
     this.loadDocument(this.props.url);
@@ -94,38 +80,27 @@ class PdfViewer extends React.Component {
     this.controller = null;
   }
 
-
   onPageInit = () => {
     // this.onResize();
     this.controller.scale(0.1);
-  };
-
-  onScaleChange = (evt) => {
-    this.setState({ scaleValue: Math.round(evt.scale * 100) });
   };
 
   handleGotoPage = (page) => {
     this.controller.setPage(page);
   };
 
-  onPageChange = ({ pageNumber }) => {
-    this.setState({ currentPage: pageNumber });
-  };
 
   onClickPage = (e) => {
-    if (e.target.className !== 'textLayer') { return; }
-    if (e.target !== this.state.clickPage && this.state.clickPage) { this.state.clickPage.style.border = `${0}px solid blue`; }
+    if (e.target.className !== 'textLayer') {
+      return;
+    }
+    if (e.target !== this.state.clickPage && this.state.clickPage) {
+      this.state.clickPage.style.border = `${0}px solid blue`;
+    }
     e.target.style.border = `${1}px solid blue`;
     this.setState({ clickPage: e.target });
     const num = e.target.parentNode.getAttribute('data-page-number');
     this.state.pdfViewer.setPage(Number(num));
-  }
-
-  zoomStep = (step) => {
-    const diff = this.state.scaleValue % ZOOM_STEP;
-    // eslint-disable-next-line no-unused-vars
-    const data = diff ? (step > 0 ? ZOOM_STEP - diff : -diff) : step;
-    this.controller.scale((this.state.scaleValue + data) / 100);
   };
 
   async loadDocument(url) {
@@ -133,7 +108,6 @@ class PdfViewer extends React.Component {
     try {
       this.doc = await PDFJS.getDocument(url);
       if (this.controller) {
-        this.setState({ totalPage: this.doc.numPages });
         this.controller.loadDoc(this.doc);
       } else {
         this.doc.destroy();
@@ -146,13 +120,8 @@ class PdfViewer extends React.Component {
   }
 
   render() {
-    const { loading } = this.props;
-    const {
-      showToolbar, currentPage, totalPage, scaleValue,
-    } = this.state;
-
     return (
-      <Container >
+      <Container>
         <ViewerContainer ref={this.pdfContainer} id="frame">
           <div id="viewer" className="pdfViewer" ref={this.pdfViewer} />
         </ViewerContainer>

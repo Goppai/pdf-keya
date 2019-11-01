@@ -1,9 +1,13 @@
+/* eslint-disable no-unused-vars */
 import React, { useRef, useEffect, useState } from 'react';
 import PDFViewer from 'components/PdfViewer';
 import forceFileDownload from 'utils/forceFileDownload';
 import styled from 'styled-components';
 import Preview from 'components/PdfViewer/preview';
-import emitter from 'utils/ev';
+import emitter from 'ev';
+import {
+  Deformation, Download, PageTurning, PrevAndNext, Print, Rotate,
+} from 'components/PdfViewer/components';
 
 const pdf = {
   url:
@@ -11,10 +15,9 @@ const pdf = {
 };
 const Wrapper = styled.div`
   display: flex;
-  height: calc(100% - 40px);
+  height: calc(100%);
   background-color: rgba(0, 0, 0, 0.08);
   user-select: none;
-  margin-top:40px;
 `;
 const PreviewWrapper = styled.div`
   flex-shrink: 0;
@@ -35,13 +38,13 @@ const ViewerWrapper = styled.div`
   background-clip: content-box;
 `;
 const PDFViewerWrapper = styled.div`
-  display: flex;
-  width: calc(100%);
-  flex-direction: column;
-  justify-content: center;
-  box-sizing: border-box;
-  align-items: center;
-  flex-shrink: 0;
+   display: flex;
+  width: calc(50%);
+  // flex-direction: column;
+  // justify-content: center;
+  // box-sizing: border-box;
+  // align-items: center;
+  // flex-shrink: 0;
   margin-left: 4px;
   height: 100%;
   background-clip: content-box;
@@ -58,10 +61,8 @@ const App = () => {
   });
   return (<Wrapper ref={wrapper}>
     <PreviewWrapper showPreview={showPreview}>
-      <Preview
-        onError={console.error} // eslint-disable-line
-        url={pdf.url}
-      />
+    <Deformation/>
+  <PageTurning/>
     </PreviewWrapper>
     <ViewerWrapper showPreview={showPreview}>
       <PDFViewerWrapper>

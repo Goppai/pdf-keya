@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import PDFJS from 'pdfjs-dist';
-import emitter from 'utils/ev';
+import emitter from 'ev';
 import RotateLeft from './components/svgjsx/Turnleft';
 import RotateRight from './components/svgjsx/Turnright';
 import ToolBar, { ToolBarWrapper } from './components/ToolBar';
@@ -19,6 +19,7 @@ PDFJS.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
 const Container = styled.div`
   width: 100%;
   height: 100%;
+  background: rgba(0, 0, 0, 0.03);
 `;
 const ViewerContainer = styled.div`
   height: 100%;
@@ -64,12 +65,11 @@ const ZOOM_STEP = 10;
 class PdfViewer extends React.Component {
   static propTypes = {
     url: PropTypes.string.isRequired,
-    loading: PropTypes.bool.isRequired,
     setLoading: PropTypes.func.isRequired,
     onError: PropTypes.func.isRequired,
     download: PropTypes.func.isRequired,
     pdfData: PropTypes.instanceOf(Object).isRequired,
-    wrapper: PropTypes.element.isRequired,
+    // wrapper: PropTypes.element.isRequired,
   };
 
   pdfContainer = React.createRef();
@@ -132,7 +132,9 @@ class PdfViewer extends React.Component {
   };
 
   onScaleChange = (evt) => {
+    if (Math.round(evt.scale * 100) === 10) { return; }
     this.setState({ scaleValue: Math.round(evt.scale * 100) });
+    emitter.emit('scaleValue', Math.round(evt.scale * 100));
   };
 
   onPrevClick = () => {
@@ -161,6 +163,7 @@ class PdfViewer extends React.Component {
 
   onPageChange = ({ pageNumber }) => {
     this.setState({ currentPage: pageNumber });
+    emitter.emit('currentPage', pageNumber);
   };
 
   zoomStep = (step) => {
@@ -182,29 +185,29 @@ class PdfViewer extends React.Component {
     }
   };
 
-  fullScreen = () => {
-    const { wrapper } = this.props;
-    wrapper.current.style.marginTop = `${0}px`;
-    wrapper.current.style.height = '100%';
-    this.toolBar.current.style.display = 'none';
-    this.HoverShowToolBar.current.style.display = 'flex';
-  };
+  // fullScreen = () => {
+  //   const { wrapper } = this.props;
+  //   wrapper.current.style.marginTop = `${0}px`;
+  //   wrapper.current.style.height = '100%';
+  //   this.toolBar.current.style.display = 'none';
+  //   this.HoverShowToolBar.current.style.display = 'flex';
+  // };
 
-  escFullScreen = () => {
-    const { wrapper } = this.props;
-    wrapper.current.style.marginTop = `${40}px`;
-    wrapper.current.style.height = 'calc(100% - 40px)';
-    this.toolBar.current.style.display = 'flex';
-    this.HoverShowToolBar.current.style.display = 'none';
-  };
+  // escFullScreen = () => {
+  //   const { wrapper } = this.props;
+  //   wrapper.current.style.marginTop = `${40}px`;
+  //   wrapper.current.style.height = 'calc(100% - 40px)';
+  //   this.toolBar.current.style.display = 'flex';
+  //   this.HoverShowToolBar.current.style.display = 'none';
+  // };
 
-  pdfHover = () => {
-    this.toolBar.current.style.display = 'flex';
-  };
+  // pdfHover = () => {
+  //   this.toolBar.current.style.display = 'flex';
+  // };
 
-  pdfHoverLeave = () => {
-    this.toolBar.current.style.display = 'none';
-  };
+  // pdfHoverLeave = () => {
+  //   this.toolBar.current.style.display = 'none';
+  // };
 
   onMouseEnter = () => {
     if (this.timer) {
@@ -238,7 +241,7 @@ class PdfViewer extends React.Component {
       const blob = new Blob([pdfData], { type: 'application/pdf' });
       const objectURL = URL.createObjectURL(blob);
 
-      iframe.src = url;
+      iframe.src = objectURL;
       iframe.onload = () => {
         URL.revokeObjectURL(objectURL);
         iframe.contentWindow.focus();
@@ -253,6 +256,7 @@ class PdfViewer extends React.Component {
       this.doc = await PDFJS.getDocument(url);
       if (this.controller) {
         this.setState({ totalPage: this.doc.numPages });
+        emitter.emit('totalPage', this.doc.numPages);
         this.controller.loadDoc(this.doc);
       } else {
         this.doc.destroy();
@@ -265,11 +269,10 @@ class PdfViewer extends React.Component {
   }
 
   render() {
-    const { loading, download } = this.props;
+    const { download } = this.props;
     const {
       showToolbar, currentPage, totalPage, scaleValue,
     } = this.state;
-
     return (
       <Container onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
         <HoverShowToolBar
@@ -281,7 +284,7 @@ class PdfViewer extends React.Component {
           <div id="viewer" className="pdfViewer" ref={this.pdfViewer} />
         </ViewerContainer>
         <iframe ref={this.iframeRef} title={Math.random()} style={{ display: 'none' }} />
-        {!loading && (
+        {false && (
           <ToolBarWrapper show={showToolbar} ref={this.toolBar} onMouseEnter={this.pdfHover}>
             <EscFullScreen onClick={this.escFullScreen}>退出全屏</EscFullScreen>
             <ToolBar>
