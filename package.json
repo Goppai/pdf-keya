@@ -1,6 +1,6 @@
 {
   "name": "pdf-keya",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "dependencies": {
     "@babel/cli": "^7.4.3",
     "@babel/core": "^7.1.6",

@@ -6,7 +6,6 @@ import emitter from 'ev';
 const Container = styled.div`
   display: flex;
   align-items: center;
-  min-width:60px;
 `;
 const Input = styled.input`
   border: none;
