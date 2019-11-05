@@ -152,6 +152,8 @@ module.exports = function (webpackEnv) {
       // changing JS code would still trigger a refresh.
     },
     output: {
+      globalObject: '(typeof self !== \'undefined\' ? self : this)',
+
       // The build folder.
       path: isEnvProduction ? paths.appBuild : paths.appBuild,
       // Add /* filename */ comments to generated require()s in the output.
@@ -548,6 +550,7 @@ module.exports = function (webpackEnv) {
           to: paths.appBuild,
         },
       ]),
+      new CopyPlugin([{ from: paths.pdfWorkerJs() }]),
       new HtmlWebpackIncludeAssetsPlugin({
         assets: ['cozy-bar.js', 'cozy-bar.css'],
         append: false,
