@@ -10,7 +10,9 @@ import Controller from './Controller';
 import 'pdfjs-dist/web/pdf_viewer.css';
 import withLoading from './withLoading';
 
-PDFJS.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
+// PDFJS.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
+const pdfjsWorker = import('pdfjs-dist/build/pdf.worker.entry');
+PDFJS.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 const Container = styled.div`
   width: 100%;
@@ -22,10 +24,12 @@ const ViewerContainer = styled.div`
   overflow: auto !important;
   text-align: center;
   .pdfViewer .page {
+    border-radius: 2px;
     border: 2px;
     border-top: 0px;
     margin-bottom: 4px;
     margin-top: 30px;
+    box-shadow: 0 4px 8px 0 rgba(130,130,130,0.50);
   }
   .pdfViewer .page:nth-of-type(n)::after {
     content: attr(data-page-number);
@@ -82,7 +86,7 @@ class PdfViewer extends React.Component {
 
   onPageInit = () => {
     // this.onResize();
-    this.controller.scale(0.1);
+    this.controller.scale(0.16);
   };
 
   handleGotoPage = (page) => {
@@ -97,7 +101,7 @@ class PdfViewer extends React.Component {
     if (e.target !== this.state.clickPage && this.state.clickPage) {
       this.state.clickPage.style.border = `${0}px solid blue`;
     }
-    e.target.style.border = `${1}px solid blue`;
+    e.target.style.border = `${2}px solid #1890FF`;
     this.setState({ clickPage: e.target });
     const num = e.target.parentNode.getAttribute('data-page-number');
     this.state.pdfViewer.setPage(Number(num));

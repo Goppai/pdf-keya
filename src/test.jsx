@@ -18,7 +18,7 @@ import {
 
 const pdf = {
   url:
-    'http://api.ip-10-3-7-254.bj.keyayun.com:8080/files/downloads/8bc9a6d335329586/冠状动脉CTA检查报告 (1).pdf',
+    'http://api.ip-10-3-7-254.bj.keyayun.com:8080/files/downloads/8dfe1b0be34c3819/冠状动脉CTA检查报告 (1).pdf',
 };
 const Wrapper = styled.div`
   display: block;
@@ -137,15 +137,3 @@ const App = () => {
 };
 
 export default App;
-export {
-  PDFViewer,
-  forceFileDownload,
-  Preview,
-  Deformation,
-  PageTurning,
-  PrevAndNext,
-  Print,
-  Rotate,
-  BackButton,
-  Reset,
-};

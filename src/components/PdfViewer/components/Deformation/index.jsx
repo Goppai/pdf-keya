@@ -9,11 +9,9 @@ const Container = styled.div`
 `;
 const Number = styled.span`
   display: block;
-  min-width: 3em;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.65);
   text-align: center;
   user-select: none;
+  margin:0px 10px;
   &::after {
     content: '%';
   }

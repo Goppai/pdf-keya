@@ -6,25 +6,23 @@ import emitter from 'ev';
 const Container = styled.div`
   display: flex;
   align-items: center;
+  min-width:60px;
 `;
 const Input = styled.input`
   border: none;
   outline: none;
-  height: 24px;
-  width: 32px;
+  height: 22px;
+  width: 26px;
   border-radius: 2px;
   text-align: center;
-  color: rgba(0, 0, 0, 0.65);
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.15);
   &&::-webkit-outer-spin-button,
   &&::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
 `;
 const Text = styled.span`
-  font-size: 14px;
   margin-left: 4px;
-  color: rgba(0, 0, 0, 0.65);
   user-select: none;
 `;
 
@@ -81,7 +79,7 @@ export default class PageTurning extends Component {
     } = this.state;
     return <Container>
     <Input type="number" onChange={this.onValueChange} onKeyDown={this.onKeyDown} value={currentPage} />
-    <Text>/{totalPage}</Text>
+    <Text>/ {totalPage}</Text>
   </Container>;
   }
 }

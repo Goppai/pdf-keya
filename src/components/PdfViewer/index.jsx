@@ -19,7 +19,6 @@ PDFJS.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.03);
 `;
 const ViewerContainer = styled.div`
   height: 100%;
@@ -34,8 +33,11 @@ const ViewerContainer = styled.div`
   .pdfViewer .page {
     border: 2px;
     border-top: 0px;
-    margin-bottom: 4px;
-    margin-top: 0px;
+    margin-bottom: 10px;
+    padding-top:23px;
+  }
+  .canvasWrapper{
+    box-shadow: 0 4px 8px 0 rgba(130,130,130,0.50);
   }
 `;
 const HoverShowToolBar = styled.div`
@@ -121,18 +123,19 @@ class PdfViewer extends React.Component {
   }
 
   onResize = () => {
-    const proportion = window.innerWidth / window.screen.width;
-
-    this.controller.scale(proportion - 0.24);
+    let proportion = window.innerWidth / window.screen.width;
+    if (window.innerWidth < 1280) proportion = 1280 / 1920;
+    this.controller.scale(proportion + 0.2);
   };
 
   onPageInit = () => {
-    this.onResize();
+    // this.onResize();
+    this.controller.scale(1.2);
     // this.controller.scale('auto');
   };
 
   onScaleChange = (evt) => {
-    if (Math.round(evt.scale * 100) === 10) { return; }
+    if (Math.round(evt.scale * 100) <= 20) { return; }
     this.setState({ scaleValue: Math.round(evt.scale * 100) });
     emitter.emit('scaleValue', Math.round(evt.scale * 100));
   };
