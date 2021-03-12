@@ -91,7 +91,7 @@
     "raw-loader": "^3.0.0",
     "react": "^16.8.0",
     "react-app-polyfill": "^0.2.0",
-    "react-dev-utils": "^7.0.0",
+    "react-dev-utils": "^11.0.4",
     "react-dom": "^16.8.0",
     "react-intl": "^2.8.0",
     "react-redux": "^7.0.3",
